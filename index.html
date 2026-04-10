@@ -494,7 +494,7 @@ tr:hover td{background:var(--al)}
 // SHA-256 hash của password "aaaa12345"
 // Để đổi password: hash password mới bằng https://emn178.github.io/online-tools/sha256.html
 // rồi thay vào PW_HASH bên dưới
-const PW_HASH = 'f1c0e6a7b3d2e5f8a9c1b4d7e2f5a8c3b6d9e1f4a7c2b5d8e3f6a9c4b7d2e5f8';
+const PW_HASH = '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5';
 
 async function sha256(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
