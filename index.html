@@ -18,7 +18,7 @@
   --sh2:0 4px 20px rgba(60,115,99,.16);
   --r:12px;--r2:8px;--r3:6px;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:15px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:18px}
 h1,h2,h3,.serif{font-family:'Fraunces',serif}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
@@ -69,7 +69,7 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 
 /* TABS */
 .tabs{display:flex;gap:2px;padding:14px 24px 0;background:var(--bg);border-bottom:2px solid var(--b);overflow-x:auto}
-.tab{padding:10px 20px;font-size:13px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
+.tab{padding:12px 22px;font-size:15px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
 .tab:hover{color:var(--accent);background:var(--al)}
 .tab.active{background:var(--card);color:var(--accent);border-color:var(--b);border-bottom-color:var(--card);font-weight:600}
 
@@ -91,17 +91,17 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 /* CARD */
 .card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:18px;box-shadow:var(--sh);transition:box-shadow .2s}
 .card:hover{box-shadow:var(--sh2)}
-.ct{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:3px}
-.cs{font-size:12px;color:var(--t2);margin-bottom:14px}
+.ct{font-family:'Fraunces',serif;font-size:18px;font-weight:500;margin-bottom:3px}
+.cs{font-size:14px;color:var(--t2);margin-bottom:14px}
 .cw{position:relative}
 .h160{height:160px}.h200{height:200px}.h220{height:220px}.h260{height:260px}
 
 /* SCORECARDS */
 .sc{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden}
 .sc-top{position:absolute;top:0;left:0;width:100%;height:3px}
-.sc-lbl{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.sc-val{font-family:'Fraunces',serif;font-size:32px;font-weight:500;line-height:1;margin-bottom:8px}
-.sc-val em{font-size:15px;font-weight:400;color:var(--t2);font-style:normal}
+.sc-lbl{font-size:13px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sc-val{font-family:'Fraunces',serif;font-size:38px;font-weight:500;line-height:1;margin-bottom:8px}
+.sc-val em{font-size:18px;font-weight:400;color:var(--t2);font-style:normal}
 .sc-foot{display:flex;gap:6px;flex-wrap:wrap}
 .tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
 .up{background:#E6F4EC;color:#1D7A3E}.dn{background:var(--redbg);color:var(--red)}.nt{background:var(--al);color:var(--accent)}
@@ -133,11 +133,11 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 
 /* TABLE */
 .tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
 thead tr{background:var(--bg)}
-th{padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
+th{padding:11px 13px;text-align:left;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
 th:hover{color:var(--accent)}
-td{padding:10px 12px;border-bottom:1px solid var(--b);vertical-align:middle}
+td{padding:11px 13px;border-bottom:1px solid var(--b);vertical-align:middle}
 tr:last-child td{border:none}
 tr:hover td{background:var(--al)}
 .rnk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:700}
@@ -190,7 +190,7 @@ tr:hover td{background:var(--al)}
       onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
     <div class="login-err" id="pw-err"></div>
-    <div class="login-hint">Contact GS9 team for access</div>
+    <div class="login-hint">Contact Tungpnt for access</div>
   </div>
 </div>
 
@@ -490,7 +490,7 @@ const COLORS=['#3C7363','#1E6FA8','#6B3FA0','#B87A1E','#B83232','#2D7A4F','#4A90
 const fmt=n=>n>=1e9?`${(n/1e9).toFixed(1)}B`:n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(0)}K`:n?.toFixed?.(0)??'—';
 const fmtR=n=>n>=1e6?`$${(n/1e6).toFixed(1)}M`:n>=1e3?`$${(n/1e3).toFixed(0)}K`:`$${n?.toFixed?.(0)??'—'}`;
 Chart.defaults.font.family="'DM Sans',sans-serif";
-Chart.defaults.font.size=13;Chart.defaults.color='#6B6860';
+Chart.defaults.font.size=14;Chart.defaults.color='#6B6860';
 
 // ── GLOBAL STATE ─────────────────────────────────────────
 let D = {}; // all loaded data
