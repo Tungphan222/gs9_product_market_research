@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SEA Game Market Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F0E8;--card:#FDFAF4;--accent:#3C7363;--accent2:#2D5A4A;--al:#EAF2EF;
+  --t:#2C2C2A;--t2:#6B6860;--t3:#9B9890;--b:#E8E2D8;--b2:#D4CEC4;
+  --red:#B83232;--redbg:#FDF0F0;--blue:#1E6FA8;--bluebg:#EEF5FB;
+  --pur:#6B3FA0;--purbg:#F3EEF9;--amb:#B87A1E;--ambbg:#FDF6EE;
+  --grn:#2D7A4F;--grnbg:#EEF7F2;--ora:#C4541A;
+  --sh:0 1px 4px rgba(44,44,42,.06),0 4px 16px rgba(44,44,42,.08);
+  --sh2:0 4px 20px rgba(60,115,99,.16);
+  --r:12px;--r2:8px;--r3:6px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:13px}
+h1,h2,h3,.serif{font-family:'Fraunces',serif}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
+
+/* ── LOGIN SCREEN ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.login-card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:40px 48px;box-shadow:var(--sh2);text-align:center;max-width:380px;width:90%}
+.login-logo{width:52px;height:52px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px}
+.login-title{font-family:'Fraunces',serif;font-size:22px;font-weight:500;margin-bottom:6px}
+.login-sub{font-size:12px;color:var(--t2);margin-bottom:28px}
+.login-input{width:100%;padding:11px 14px;border:1.5px solid var(--b);border-radius:var(--r2);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;background:var(--bg);transition:border-color .2s;text-align:center;letter-spacing:2px}
+.login-input:focus{border-color:var(--accent)}
+.login-btn{width:100%;margin-top:12px;padding:11px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+.login-btn:hover{background:var(--accent2)}
+.login-err{color:var(--red);font-size:12px;margin-top:10px;min-height:18px}
+.login-hint{font-size:11px;color:var(--t3);margin-top:16px}
+
+/* ── LOADING ── */
+#loading{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:998;flex-direction:column;gap:12px}
+.spinner{width:36px;height:36px;border:3px solid var(--b);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px;color:var(--t2)}
+
+/* ── MAIN APP ── */
+#app{display:none}
+
+/* HEADER */
+.hdr{background:var(--card);border-bottom:1.5px solid var(--b);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:var(--sh)}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.logo{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.hdr h1{font-size:19px;font-weight:500}.hdr h1 span{color:var(--accent)}
+.hdr-r{display:flex;gap:8px;align-items:center}
+.badge{background:var(--al);color:var(--accent);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid rgba(60,115,99,.2)}
+.badge.ora{background:var(--ambbg);color:var(--amb);border-color:rgba(184,122,30,.2)}
+.btn-logout{padding:5px 12px;background:transparent;color:var(--t2);border:1px solid var(--b2);border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+/* FILTER BAR */
+.fbar{background:var(--card);border-bottom:1px solid var(--b);padding:10px 24px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.fg select{padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t);outline:none;cursor:pointer;min-width:110px}
+.fg select:focus{border-color:var(--accent)}
+.sep{width:1px;height:36px;background:var(--b)}
+.btn{padding:7px 16px;border:none;border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
+.btn-pri{background:var(--accent);color:#fff}.btn-pri:hover{background:var(--accent2)}
+.btn-sec{background:transparent;color:var(--t2);border:1px solid var(--b2)}.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+
+/* TABS */
+.tabs{display:flex;gap:2px;padding:14px 24px 0;background:var(--bg);border-bottom:2px solid var(--b);overflow-x:auto}
+.tab{padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
+.tab:hover{color:var(--accent);background:var(--al)}
+.tab.active{background:var(--card);color:var(--accent);border-color:var(--b);border-bottom-color:var(--card);font-weight:600}
+
+/* PANES */
+.pane{display:none;padding:20px 24px 48px}
+.pane.active{display:block}
+.sh{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;padding-bottom:8px;border-bottom:1.5px solid var(--b)}
+.st{font-family:'Fraunces',serif;font-size:16px;font-weight:500}
+.ss{font-size:11px;color:var(--t2)}
+.sec{margin-bottom:24px}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.span2{grid-column:span 2}.span3{grid-column:1/-1}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:18px;box-shadow:var(--sh);transition:box-shadow .2s}
+.card:hover{box-shadow:var(--sh2)}
+.ct{font-family:'Fraunces',serif;font-size:13px;font-weight:500;margin-bottom:2px}
+.cs{font-size:11px;color:var(--t2);margin-bottom:14px}
+.cw{position:relative}
+.h160{height:160px}.h200{height:200px}.h220{height:220px}.h260{height:260px}
+
+/* SCORECARDS */
+.sc{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.sc-top{position:absolute;top:0;left:0;width:100%;height:3px}
+.sc-lbl{font-size:10px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sc-val{font-family:'Fraunces',serif;font-size:26px;font-weight:500;line-height:1;margin-bottom:8px}
+.sc-val em{font-size:13px;font-weight:400;color:var(--t2);font-style:normal}
+.sc-foot{display:flex;gap:6px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
+.up{background:#E6F4EC;color:#1D7A3E}.dn{background:var(--redbg);color:var(--red)}.nt{background:var(--al);color:var(--accent)}
+.tag-row{display:flex;flex-direction:column;gap:1px}
+.tag-sub{font-size:9px;color:var(--t3)}
+
+/* MARKET STAT CARDS */
+.msc{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:14px 16px;box-shadow:var(--sh)}
+.msc-name{font-family:'Fraunces',serif;font-size:14px;font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.msc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.msc-item{background:var(--bg);border-radius:6px;padding:7px 9px}
+.msc-item-lbl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:2px}
+.msc-item-val{font-size:13px;font-weight:600}
+.msc-rev{margin-top:10px;padding-top:10px;border-top:1px solid var(--b)}
+.msc-rev-lbl{font-size:10px;font-weight:600;color:var(--t2);margin-bottom:6px}
+.pb-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.pb-label{font-size:10px;color:var(--t2);width:50px}
+.pb-wrap{flex:1;height:5px;background:var(--b);border-radius:3px;overflow:hidden}
+.pb-fill{height:100%;border-radius:3px}
+.pb-val{font-size:10px;font-weight:600;width:42px;text-align:right}
+
+/* BAR METRIC */
+.mr{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--b)}
+.mr:last-child{border:none}
+.mr-lbl{font-size:12px;font-weight:500;flex:0 0 120px}
+.mr-bar-wrap{flex:1;height:5px;background:var(--b);border-radius:3px;overflow:hidden}
+.mr-bar{height:100%;border-radius:3px}
+.mr-val{font-size:11px;font-weight:600;min-width:50px;text-align:right}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead tr{background:var(--bg)}
+th{padding:8px 10px;text-align:left;font-size:9px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--accent)}
+td{padding:8px 10px;border-bottom:1px solid var(--b);vertical-align:middle}
+tr:last-child td{border:none}
+tr:hover td{background:var(--al)}
+.rnk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:700}
+.r1{background:#FFF3CD;color:#856404}.r2{background:#F0F0EE;color:#555}.r3{background:#FFE8D8;color:#8B4513}.rn{background:var(--bg);color:var(--t3)}
+.pill{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap}
+.p-ios{background:var(--bluebg);color:var(--blue)}
+.p-and{background:var(--grnbg);color:var(--grn)}
+.p-both{background:var(--al);color:var(--accent)}
+.p-g{background:var(--bg);color:var(--t2);border:1px solid var(--b)}
+.p-pub{background:var(--ambbg);color:var(--amb)}
+
+/* DONUT LEGEND */
+.dl{display:flex;flex-direction:column;gap:5px;justify-content:center}
+.dl-row{display:flex;align-items:center;gap:5px;font-size:11px}
+.dl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.dl-name{flex:1;color:var(--t2)}.dl-val{font-weight:600}
+
+/* HEATMAP */
+.hm table{border-collapse:separate;border-spacing:3px}
+.hm th{font-size:9px;font-weight:600;color:var(--t2);padding:3px 8px;background:transparent;border:none;text-transform:uppercase}
+.hm td{padding:7px 10px;border-radius:5px;text-align:center;font-size:10px;font-weight:600;cursor:default;transition:transform .15s}
+.hm td:hover{transform:scale(1.05)}
+
+/* INSIGHT */
+.insight{background:var(--al);border-left:3px solid var(--accent);border-radius:0 var(--r3) var(--r3) 0;padding:10px 12px;margin-top:12px;font-size:11px;line-height:1.6}
+.insight strong{color:var(--accent)}
+
+/* PAGINATION */
+.pagination{display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:12px;font-size:12px}
+.pg-btn{padding:4px 10px;border:1px solid var(--b);border-radius:var(--r3);background:var(--card);cursor:pointer;font-size:11px}
+.pg-btn:hover{border-color:var(--accent);color:var(--accent)}
+.pg-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pg-info{color:var(--t2);font-size:11px}
+
+/* SPARK */
+.spark{display:inline-flex;align-items:flex-end;gap:2px;height:20px}
+.sb{width:3px;border-radius:2px;background:var(--accent);opacity:.5}
+.sb.last{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🎮</div>
+    <div class="login-title">SEA Game Market</div>
+    <div class="login-sub">Intelligence Dashboard · GS9 Research</div>
+    <input class="login-input" type="password" id="pw-input" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
+    <div class="login-err" id="pw-err"></div>
+    <div class="login-hint">Contact GS9 team for access</div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-txt">Loading dashboard data...</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="hdr">
+    <div class="hdr-l">
+      <div class="logo">🎮</div>
+      <div>
+        <h1>SEA Game Market <span>Intelligence</span></h1>
+        <div style="font-size:10px;color:var(--t2);margin-top:1px">Powered by Sensor Tower · GS9 Research</div>
+      </div>
+    </div>
+    <div class="hdr-r">
+      <div class="badge" id="hdr-range">Loading...</div>
+      <div class="badge ora" id="hdr-stats">Loading...</div>
+      <div style="font-size:11px;color:var(--t2)" id="hdr-updated"></div>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="fbar">
+    <div class="fg"><label>Month</label><select id="f-mo" onchange="applyFilters()"><option value="">All</option></select></div>
+    <div class="sep"></div>
+    <div class="fg"><label>Market</label><select id="f-mkt" onchange="applyFilters()"><option value="">All Markets</option></select></div>
+    <div class="fg"><label>Platform</label><select id="f-plat" onchange="applyFilters()"><option value="">All</option></select></div>
+    <div class="sep"></div>
+    <div class="fg"><label>Genre</label><select id="f-genre" onchange="applyFilters()"><option value="">All Genres</option></select></div>
+    <div class="fg"><label>Pub. Country</label><select id="f-pc" onchange="applyFilters()"><option value="">All</option></select></div>
+    <div class="sep"></div>
+    <button class="btn btn-sec" onclick="resetFilters()">Reset</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="T(0)">📋 Summary</div>
+    <div class="tab" onclick="T(1)">🗺 Market Size</div>
+    <div class="tab" onclick="T(2)">📈 Trends</div>
+    <div class="tab" onclick="T(3)">🎯 Genre Intel</div>
+    <div class="tab" onclick="T(4)">🏢 Publishers</div>
+    <div class="tab" onclick="T(5)">🏆 Leaderboard</div>
+  </div>
+
+  <!-- PANE 0: SUMMARY -->
+  <div class="pane active" id="p0">
+    <div class="sec">
+      <div class="sh"><div class="st">Executive Summary</div><div class="ss" id="sum-period"></div></div>
+      <div class="g4" style="margin-bottom:14px">
+        <div class="sc"><div class="sc-top" style="background:var(--accent)"></div>
+          <div class="sc-lbl">Total Revenue (IAP)</div>
+          <div class="sc-val" id="sc-rev">—</div>
+          <div class="sc-foot" id="sc-rev-tags"></div>
+        </div>
+        <div class="sc"><div class="sc-top" style="background:var(--blue)"></div>
+          <div class="sc-lbl">Total Downloads</div>
+          <div class="sc-val" id="sc-dl">—</div>
+          <div class="sc-foot" id="sc-dl-tags"></div>
+        </div>
+        <div class="sc"><div class="sc-top" style="background:var(--pur)"></div>
+          <div class="sc-lbl">Rev per Download (RPD)</div>
+          <div class="sc-val" id="sc-rpd">—</div>
+        </div>
+        <div class="sc"><div class="sc-top" style="background:var(--amb)"></div>
+          <div class="sc-lbl">Games Tracked</div>
+          <div class="sc-val" id="sc-games">—</div>
+          <div class="sc-foot" id="sc-games-tags"></div>
+        </div>
+      </div>
+      <div class="g21">
+        <div class="card">
+          <div class="ct">Monthly Revenue & Downloads</div>
+          <div class="cs">Bars = REV · Line = Downloads</div>
+          <div class="cw h220"><canvas id="c-overview"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">Platform Split</div>
+          <div class="cs">iOS vs Android — Revenue share</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h160" style="flex:1"><canvas id="c-plat-d"></canvas></div>
+            <div class="dl" id="plat-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Revenue by Market</div>
+          <div class="cs">% contribution to total</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h160" style="flex:1"><canvas id="c-mkt-d"></canvas></div>
+            <div class="dl" id="mkt-legend"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">Revenue by Genre</div>
+          <div class="cs">% contribution to total</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h160" style="flex:1"><canvas id="c-genre-d"></canvas></div>
+            <div class="dl" id="genre-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 1: MARKET SIZE (static Newzoo data) -->
+  <div class="pane" id="p1">
+    <div class="sec">
+      <div class="sh"><div class="st">Market Size by Country</div><div class="ss">Source: Newzoo 2024</div></div>
+      <div class="g3" id="market-cards"></div>
+    </div>
+    <div class="sec">
+      <div class="card">
+        <div class="ct">Spent per Payer by Market</div>
+        <div class="cs">Higher = more valuable per user · SG leads at $182.8</div>
+        <div class="cw h200"><canvas id="c-spp"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 2: TRENDS -->
+  <div class="pane" id="p2">
+    <div class="sec">
+      <div class="sh"><div class="st">Trend Analysis</div><div class="ss">Based on your Sensor Tower data</div></div>
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Revenue Trend by Market</div>
+          <div class="cs">Monthly REV per country</div>
+          <div class="cw h220"><canvas id="c-rev-mkt"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">Downloads Trend by Market</div>
+          <div class="cs">Monthly DL per country</div>
+          <div class="cw h220"><canvas id="c-dl-mkt"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Platform Split Over Time</div>
+          <div class="cs">iOS vs Android — 100% stacked</div>
+          <div class="cw h220"><canvas id="c-plat-stk"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">Top Genre Revenue Trend</div>
+          <div class="cs">Monthly REV by genre</div>
+          <div class="cw h220"><canvas id="c-genre-trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 3: GENRE -->
+  <div class="pane" id="p3">
+    <div class="sec">
+      <div class="sh"><div class="st">Genre Intelligence</div><div class="ss">Download vs Revenue — Volume ≠ Monetization</div></div>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="card">
+          <div class="ct">Download Share by Genre</div>
+          <div class="cs">% of total downloads</div>
+          <div class="cw h200"><canvas id="c-dl-genre"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">Revenue Share by Genre</div>
+          <div class="cs">% of total IAP revenue</div>
+          <div class="cw h200"><canvas id="c-rev-genre"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">Genre: Download vs Revenue Gap</div>
+        <div class="cs">Highlight mismatches between volume and monetization</div>
+        <div class="cw h220"><canvas id="c-genre-gap"></canvas></div>
+        <div class="insight"><strong>Key:</strong> Genre có DL cao nhưng REV thấp = volume play. Genre có REV cao nhưng DL thấp = monetization play (RPG, Strategy).</div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sh"><div class="st">SubGenre Heatmap</div><div class="ss">REV by Genre × SubGenre · color = magnitude</div></div>
+      <div class="card"><div class="hm" id="hm-wrap" style="overflow-x:auto"></div></div>
+    </div>
+  </div>
+
+  <!-- PANE 4: PUBLISHERS -->
+  <div class="pane" id="p4">
+    <div class="sec">
+      <div class="sh"><div class="st">Publisher Performance</div><div class="ss">Based on your Sensor Tower data</div></div>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="card">
+          <div class="ct">Top Publishers — Revenue Share</div>
+          <div class="cs">% of total IAP</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h200" style="flex:1"><canvas id="c-pub-d"></canvas></div>
+            <div class="dl" id="pub-legend" style="min-width:140px"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">Publisher Country Revenue</div>
+          <div class="cs">% by publisher origin country</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h200" style="flex:1"><canvas id="c-pubcountry-d"></canvas></div>
+            <div class="dl" id="pubcountry-legend" style="min-width:130px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">Top Publisher Table</div>
+        <div class="cs">Sorted by total revenue · from your data</div>
+        <div class="tw"><table>
+          <thead><tr><th>#</th><th>Publisher</th><th>Country</th><th>Games</th><th>Total REV</th><th>Total DL</th></tr></thead>
+          <tbody id="pub-tb"></tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 5: LEADERBOARD -->
+  <div class="pane" id="p5">
+    <div class="sec">
+      <div class="sh"><div class="st">Top Games Leaderboard</div><div class="ss" id="lb-info"></div></div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end">
+        <div class="fg"><label>Search Game</label>
+          <input type="text" id="lb-search" placeholder="Game name..." oninput="renderLb()"
+            style="padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;min-width:160px;background:var(--bg)"></div>
+        <div class="fg"><label>Genre</label><select id="lb-g" onchange="renderLb()"><option value="">All</option></select></div>
+        <div class="fg"><label>Market</label><select id="lb-m" onchange="renderLb()"><option value="">All</option></select></div>
+        <div class="fg"><label>Platform</label><select id="lb-p" onchange="renderLb()"><option value="">All</option></select></div>
+        <div class="fg"><label>Month</label><select id="lb-mo" onchange="renderLb()"><option value="">All</option></select></div>
+        <div class="fg"><label>Sort by</label>
+          <select id="lb-s" onchange="renderLb()">
+            <option value="rev">Revenue ↓</option>
+            <option value="dl">Downloads ↓</option>
+            <option value="rpd">RPD ↓</option>
+          </select>
+        </div>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="tw"><table>
+          <thead><tr>
+            <th>#</th><th>Game</th><th>Publisher</th><th>Genre</th><th>Sub-genre</th>
+            <th>Market</th><th>Platform</th><th>Month</th>
+            <th>Revenue ($)</th><th>Downloads</th><th>RPD</th><th>Pub.Country</th>
+          </tr></thead>
+          <tbody id="lb-tb"></tbody>
+        </table></div>
+        <div class="pagination" style="padding:12px 16px">
+          <span class="pg-info" id="pg-info"></span>
+          <button class="pg-btn" onclick="pgMove(-1)">← Prev</button>
+          <span id="pg-btns"></span>
+          <button class="pg-btn" onclick="pgMove(1)">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── PASSWORD ─────────────────────────────────────────────
+// SHA-256 hash của password "aaaa12345"
+// Để đổi password: hash password mới bằng https://emn178.github.io/online-tools/sha256.html
+// rồi thay vào PW_HASH bên dưới
+const PW_HASH = 'f1c0e6a7b3d2e5f8a9c1b4d7e2f5a8c3b6d9e1f4a7c2b5d8e3f6a9c4b7d2e5f8';
+
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function doLogin(){
+  const pw = document.getElementById('pw-input').value;
+  const hash = await sha256(pw);
+  if(hash === PW_HASH){
+    sessionStorage.setItem('auth','1');
+    document.getElementById('login-screen').style.display='none';
+    initApp();
+  } else {
+    document.getElementById('pw-err').textContent='Incorrect password. Please try again.';
+    document.getElementById('pw-input').value='';
+  }
+}
+function doLogout(){
+  sessionStorage.removeItem('auth');
+  location.reload();
+}
+// Auto-login nếu đã auth trong session
+if(sessionStorage.getItem('auth')==='1'){
+  document.getElementById('login-screen').style.display='none';
+  initApp();
+}
+
+// ── CONSTANTS ────────────────────────────────────────────
+const COLORS=['#3C7363','#1E6FA8','#6B3FA0','#B87A1E','#B83232','#2D7A4F','#4A90B8','#8B5A2B','#C4541A','#5A8040'];
+const fmt=n=>n>=1e9?`${(n/1e9).toFixed(1)}B`:n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(0)}K`:n?.toFixed?.(0)??'—';
+const fmtR=n=>n>=1e6?`$${(n/1e6).toFixed(1)}M`:n>=1e3?`$${(n/1e3).toFixed(0)}K`:`$${n?.toFixed?.(0)??'—'}`;
+Chart.defaults.font.family="'DM Sans',sans-serif";
+Chart.defaults.font.size=11;Chart.defaults.color='#6B6860';
+
+// ── GLOBAL STATE ─────────────────────────────────────────
+let D = {}; // all loaded data
+let charts = {};
+let lbPage = 0;
+const LB_PAGE_SIZE = 50;
+
+// ── LOAD DATA ────────────────────────────────────────────
+async function loadJSON(file){
+  const r = await fetch(`data/${file}?_=${Date.now()}`);
+  if(!r.ok) throw new Error(`Failed to load ${file}`);
+  return r.json();
+}
+
+async function initApp(){
+  document.getElementById('loading').style.display='flex';
+  try {
+    const [summary, trends, genre, publisher, leaderboard, filters] = await Promise.all([
+      loadJSON('summary.json'),
+      loadJSON('trends.json'),
+      loadJSON('genre.json'),
+      loadJSON('publisher.json'),
+      loadJSON('leaderboard.json'),
+      loadJSON('filters.json'),
+    ]);
+    D = { summary, trends, genre, publisher, leaderboard, filters };
+    buildFilters();
+    buildApp();
+  } catch(e) {
+    alert('Error loading data: ' + e.message);
+    console.error(e);
+  }
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+// ── BUILD FILTER DROPDOWNS ───────────────────────────────
+function buildFilters(){
+  const f = D.filters;
+  populateSelect('f-mo',   f.months,       true);
+  populateSelect('f-mkt',  f.markets,      false);
+  populateSelect('f-plat', f.platforms,    false);
+  populateSelect('f-genre',f.genres,       false);
+  populateSelect('f-pc',   f.pub_countries,false);
+  populateSelect('lb-g',   f.genres,       false);
+  populateSelect('lb-m',   f.markets,      false);
+  populateSelect('lb-p',   f.platforms,    false);
+  populateSelect('lb-mo',  f.months,       true);
+}
+function populateSelect(id, vals, reverseOrder=false){
+  const el = document.getElementById(id);
+  const list = reverseOrder ? [...vals].reverse() : vals;
+  list.forEach(v => {
+    const o = document.createElement('option');
+    o.value = o.textContent = v;
+    el.appendChild(o);
+  });
+}
+
+// ── FILTER HELPERS ───────────────────────────────────────
+function getFilters(){
+  return {
+    mo:    document.getElementById('f-mo').value,
+    mkt:   document.getElementById('f-mkt').value,
+    plat:  document.getElementById('f-plat').value,
+    genre: document.getElementById('f-genre').value,
+    pc:    document.getElementById('f-pc').value,
+  };
+}
+function filterTrends(){
+  const f = getFilters();
+  return D.trends.filter(r=>
+    (!f.mo   || r.month   === f.mo)  &&
+    (!f.mkt  || r.country === f.mkt) &&
+    (!f.plat || r.platform=== f.plat)
+  );
+}
+function filterGenre(){
+  const f = getFilters();
+  return D.genre.filter(r=>
+    (!f.mo    || r.month   === f.mo)    &&
+    (!f.mkt   || r.country === f.mkt)   &&
+    (!f.genre || r.genre   === f.genre)
+  );
+}
+function filterLb(){
+  const g  = document.getElementById('lb-g').value;
+  const m  = document.getElementById('lb-m').value;
+  const p  = document.getElementById('lb-p').value;
+  const mo = document.getElementById('lb-mo').value;
+  const s  = document.getElementById('lb-search').value.toLowerCase();
+  const f  = getFilters();
+  return D.leaderboard.filter(r=>
+    (!g  || r.genre   === g)  &&
+    (!m  || r.market  === m)  &&
+    (!p  || r.platform=== p)  &&
+    (!mo || r.month   === mo) &&
+    (!s  || (r.game||'').toLowerCase().includes(s)) &&
+    (!f.pc || r.publisher_country === f.pc)
+  );
+}
+
+function applyFilters(){ buildApp(); }
+function resetFilters(){
+  ['f-mo','f-mkt','f-plat','f-genre','f-pc'].forEach(id=>document.getElementById(id).value='');
+  buildApp();
+}
+
+// ── CHART HELPERS ────────────────────────────────────────
+function destroyChart(id){
+  if(charts[id]){ charts[id].destroy(); delete charts[id]; }
+}
+function mkDonut(id,labels,data,colors){
+  destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:'#FDFAF4',hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false}}}});
+}
+function mkLine(id,labels,datasets){
+  destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:10,font:{size:10}}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#EEE8DE'},ticks:{font:{size:9}}}},
+      elements:{point:{radius:2,hoverRadius:4},line:{tension:.35}}}});
+}
+function mkBar(id,labels,datasets,stacked=false,ytick=null){
+  destroyChart(id);
+  charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:10,font:{size:10}}}},
+      scales:{x:{stacked,grid:{display:false},ticks:{font:{size:9}}},
+        y:{stacked,grid:{color:'#EEE8DE'},ticks:{font:{size:9},callback:ytick||undefined}}}}});
+}
+
+// ── GROUP HELPERS ────────────────────────────────────────
+function groupBy(arr, key, valKey, sum=true){
+  const map={};
+  arr.forEach(r=>{
+    const k=r[key]||'Unknown';
+    map[k]=(map[k]||0)+(sum?r[valKey]:1);
+  });
+  return map;
+}
+function topN(obj, n, minVal=0){
+  return Object.entries(obj)
+    .filter(([,v])=>v>minVal)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,n);
+}
+function uniqueMonths(arr){
+  return [...new Set(arr.map(r=>r.month))].sort();
+}
+
+// ── BUILD APP ────────────────────────────────────────────
+function buildApp(){
+  buildSummary();
+  if(document.getElementById('p1').classList.contains('active')) buildMarket();
+  if(document.getElementById('p2').classList.contains('active')) buildTrends();
+  if(document.getElementById('p3').classList.contains('active')) buildGenre();
+  if(document.getElementById('p4').classList.contains('active')) buildPublishers();
+  if(document.getElementById('p5').classList.contains('active')){ lbPage=0; renderLb(); }
+}
+
+// ── SUMMARY ──────────────────────────────────────────────
+function buildSummary(){
+  const s = D.summary;
+  document.getElementById('hdr-range').textContent   = `${s.date_from} → ${s.date_to}`;
+  document.getElementById('hdr-stats').textContent   = `${s.total_games} Games · ${s.total_markets} Markets`;
+  document.getElementById('hdr-updated').textContent = `Updated: ${s.updated_at}`;
+  document.getElementById('sum-period').textContent  = `${s.date_from} → ${s.date_to}`;
+
+  document.getElementById('sc-rev').innerHTML   = `${fmtR(s.total_rev)}`;
+  document.getElementById('sc-dl').innerHTML    = `${fmt(s.total_dl)}`;
+  document.getElementById('sc-rpd').innerHTML   = `$${s.rpd?.toFixed(3)??'—'}`;
+  document.getElementById('sc-games').innerHTML = `${fmt(s.total_games)}<em> titles</em>`;
+
+  const momRevTag = s.mom_rev>=0
+    ? `<div class="tag up">▲ ${s.mom_rev}%</div>`
+    : `<div class="tag dn">▼ ${Math.abs(s.mom_rev)}%</div>`;
+  const momDlTag = s.mom_dl>=0
+    ? `<div class="tag up">▲ ${s.mom_dl}%</div>`
+    : `<div class="tag dn">▼ ${Math.abs(s.mom_dl)}%</div>`;
+
+  document.getElementById('sc-rev-tags').innerHTML =
+    `<div class="tag-row">${momRevTag}<div class="tag-sub">MoM</div></div>`;
+  document.getElementById('sc-dl-tags').innerHTML  =
+    `<div class="tag-row">${momDlTag}<div class="tag-sub">MoM</div></div>`;
+  document.getElementById('sc-games-tags').innerHTML =
+    `<div class="tag nt">${s.total_markets} Markets</div><div class="tag nt">${s.total_publishers} Publishers</div>`;
+
+  // Overview combo chart
+  const td = filterTrends();
+  const months = uniqueMonths(td);
+  const totalRev = months.map(m=>td.filter(r=>r.month===m).reduce((a,r)=>a+r.rev,0));
+  const totalDl  = months.map(m=>td.filter(r=>r.month===m).reduce((a,r)=>a+r.dl,0));
+  destroyChart('c-overview');
+  charts['c-overview']=new Chart(document.getElementById('c-overview'),{type:'bar',
+    data:{labels:months,datasets:[
+      {type:'bar',label:'Revenue',data:totalRev,backgroundColor:'rgba(60,115,99,.22)',borderColor:'#3C7363',borderWidth:1.5,borderRadius:3,yAxisID:'y'},
+      {type:'line',label:'Downloads',data:totalDl,borderColor:'#1E6FA8',backgroundColor:'transparent',borderWidth:2,pointRadius:2,yAxisID:'y2'}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:10,font:{size:10}}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},
+        y:{position:'left',grid:{color:'#EEE8DE'},ticks:{font:{size:9},callback:v=>fmtR(v)}},
+        y2:{position:'right',grid:{display:false},ticks:{font:{size:9},callback:v=>fmt(v)}}}}});
+
+  // Platform donut
+  const platRev = groupBy(td,'platform','rev');
+  const platEntries = topN(platRev,5);
+  mkDonut('c-plat-d',platEntries.map(e=>e[0]),platEntries.map(e=>e[1]),COLORS);
+  document.getElementById('plat-legend').innerHTML = platEntries.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
+
+  // Market donut
+  const mktRev = groupBy(td,'country','rev');
+  const mktEntries = topN(mktRev,8);
+  mkDonut('c-mkt-d',mktEntries.map(e=>e[0]),mktEntries.map(e=>e[1]),COLORS);
+  document.getElementById('mkt-legend').innerHTML = mktEntries.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
+
+  // Genre donut
+  const gd = filterGenre();
+  const genreRev = groupBy(gd,'genre','rev');
+  const genreEntries = topN(genreRev,8);
+  mkDonut('c-genre-d',genreEntries.map(e=>e[0]),genreEntries.map(e=>e[1]),COLORS);
+  document.getElementById('genre-legend').innerHTML = genreEntries.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
+}
+
+// ── MARKET SIZE (static) ─────────────────────────────────
+function buildMarket(){
+  const markets=[
+    {flag:'🇮🇩',name:'Indonesia',pop:'279.8M',rev:'$1,958M',players:'154.9M',spp:'$25.7',cagr:'6.4%',payers:'76.2M',mobile:78,pc:15,console:7,mRev:'$1,528M',pRev:'$291M',cRev:'$139M'},
+    {flag:'🇹🇭',name:'Thailand', pop:'71.9M', rev:'$1,160M',players:'41.0M', spp:'$51.0',cagr:'6.1%',payers:'22.8M',mobile:67,pc:25,console:8,mRev:'$780M', pRev:'$289M',cRev:'$91M'},
+    {flag:'🇲🇾',name:'Malaysia', pop:'34.7M', rev:'$980M',  players:'25.0M', spp:'$89.9',cagr:'5.5%',payers:'10.9M',mobile:64,pc:24,console:12,mRev:'$627M',pRev:'$238M',cRev:'$115M'},
+    {flag:'🇵🇭',name:'Philippines',pop:'119.1M',rev:'$924M',players:'67.7M',spp:'$30.7',cagr:'7.8%',payers:'30.1M',mobile:70,pc:23,console:7,mRev:'$650M',pRev:'$216M',cRev:'$58M'},
+    {flag:'🇸🇬',name:'Singapore',pop:'6.1M',  rev:'$568M',  players:'4.6M',  spp:'$182.8',cagr:'2.4%',payers:'3.1M',mobile:53,pc:29,console:17,mRev:'$303M',pRev:'$167M',cRev:'$98M'},
+    {flag:'🇻🇳',name:'Vietnam',  pop:'99.5M', rev:'$846M',  players:'58.5M', spp:'$25.5',cagr:'8.2%',payers:'33.2M',mobile:62,pc:32,console:6,mRev:'$520M',pRev:'$271M',cRev:'$54M'},
+  ];
+  const cont=document.getElementById('market-cards');
+  cont.innerHTML='';
+  markets.forEach(m=>{
+    cont.innerHTML+=`<div class="msc">
+      <div class="msc-name"><span>${m.flag}</span>${m.name}</div>
+      <div class="msc-grid">
+        <div class="msc-item"><div class="msc-item-lbl">Population</div><div class="msc-item-val">${m.pop}</div></div>
+        <div class="msc-item"><div class="msc-item-lbl">Total Revenue</div><div class="msc-item-val" style="color:var(--accent)">${m.rev}</div></div>
+        <div class="msc-item"><div class="msc-item-lbl">Total Players</div><div class="msc-item-val">${m.players}</div></div>
+        <div class="msc-item"><div class="msc-item-lbl">Spent/Payer</div><div class="msc-item-val" style="color:var(--ora)">${m.spp}</div></div>
+      </div>
+      <div class="msc-rev">
+        <div class="msc-rev-lbl">Revenue by Platform · CAGR ${m.cagr} · Payers: ${m.payers}</div>
+        <div class="pb-row"><div class="pb-label">Mobile</div><div class="pb-wrap"><div class="pb-fill" style="width:${m.mobile}%;background:var(--accent)"></div></div><div class="pb-val">${m.mRev}</div></div>
+        <div class="pb-row"><div class="pb-label">PC</div><div class="pb-wrap"><div class="pb-fill" style="width:${m.pc}%;background:var(--blue)"></div></div><div class="pb-val">${m.pRev}</div></div>
+        <div class="pb-row"><div class="pb-label">Console</div><div class="pb-wrap"><div class="pb-fill" style="width:${m.console}%;background:var(--pur)"></div></div><div class="pb-val">${m.cRev}</div></div>
+      </div>
+    </div>`;
+  });
+  mkBar('c-spp',markets.map(m=>m.flag+' '+m.name),[
+    {label:'Spent/Payer ($)',data:markets.map(m=>parseFloat(m.spp.replace('$',''))),
+      backgroundColor:COLORS,borderRadius:5}
+  ],false,v=>`$${v}`);
+}
+
+// ── TRENDS ───────────────────────────────────────────────
+function buildTrends(){
+  const td = filterTrends();
+  const months = uniqueMonths(td);
+
+  // Rev by market
+  const mkts=[...new Set(td.map(r=>r.country))].slice(0,6);
+  mkLine('c-rev-mkt',months,mkts.map((m,i)=>({
+    label:m,borderColor:COLORS[i],backgroundColor:'transparent',borderWidth:2,
+    data:months.map(mo=>td.filter(r=>r.month===mo&&r.country===m).reduce((a,r)=>a+r.rev,0))
+  })));
+  mkLine('c-dl-mkt',months,mkts.map((m,i)=>({
+    label:m,borderColor:COLORS[i],backgroundColor:'transparent',borderWidth:2,
+    data:months.map(mo=>td.filter(r=>r.month===mo&&r.country===m).reduce((a,r)=>a+r.dl,0))
+  })));
+
+  // Platform stacked
+  const plats=[...new Set(td.map(r=>r.platform))];
+  mkBar('c-plat-stk',months,plats.map((p,i)=>({
+    label:p,backgroundColor:COLORS[i],stack:'s',
+    data:months.map(mo=>td.filter(r=>r.month===mo&&r.platform===p).reduce((a,r)=>a+r.rev,0))
+  })),true);
+
+  // Genre trend
+  const gd = filterGenre();
+  const gMonths = uniqueMonths(gd);
+  const topGenres = topN(groupBy(gd,'genre','rev'),6).map(e=>e[0]);
+  mkLine('c-genre-trend',gMonths,topGenres.map((g,i)=>({
+    label:g,borderColor:COLORS[i],backgroundColor:'transparent',borderWidth:2,
+    data:gMonths.map(mo=>gd.filter(r=>r.month===mo&&r.genre===g).reduce((a,r)=>a+r.rev,0))
+  })));
+}
+
+// ── GENRE ────────────────────────────────────────────────
+function buildGenre(){
+  const gd = filterGenre();
+  const genreRev = groupBy(gd,'genre','rev');
+  const genreDl  = groupBy(gd,'genre','dl');
+  const topG = topN(genreRev,8).map(e=>e[0]);
+
+  mkDonut('c-dl-genre',topG,topG.map(g=>genreDl[g]||0),COLORS);
+  mkDonut('c-rev-genre',topG,topG.map(g=>genreRev[g]||0),COLORS);
+
+  // Gap chart
+  const totalRev = Object.values(genreRev).reduce((a,v)=>a+v,0)||1;
+  const totalDl  = Object.values(genreDl).reduce((a,v)=>a+v,0)||1;
+  mkBar('c-genre-gap',topG,[
+    {label:'DL Share %',data:topG.map(g=>+((genreDl[g]||0)/totalDl*100).toFixed(1)),backgroundColor:'rgba(30,111,168,.6)',borderRadius:3},
+    {label:'REV Share %',data:topG.map(g=>+((genreRev[g]||0)/totalRev*100).toFixed(1)),backgroundColor:'rgba(60,115,99,.7)',borderRadius:3}
+  ],false);
+
+  // SubGenre heatmap
+  const subRev={};
+  gd.forEach(r=>{
+    const k=`${r.genre}|||${r.sub_genre}`;
+    subRev[k]=(subRev[k]||0)+r.rev;
+  });
+  const topSub = Object.entries(subRev).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const maxV = Math.max(...topSub.map(e=>e[1]))||1;
+  let h=`<table><thead><tr><th>Genre</th><th>Sub-genre</th><th>Total REV</th><th>Visual</th></tr></thead><tbody>`;
+  topSub.forEach(([k,v])=>{
+    const [genre,sub]=k.split('|||');
+    const pct=v/maxV;
+    const bg=`rgba(60,115,99,${.08+pct*.8})`;
+    const tc=pct>.5?'#fff':'#2C2C2A';
+    const barW=Math.round(pct*200);
+    h+=`<tr>
+      <td style="font-weight:600;font-size:10px;color:var(--t2);white-space:nowrap">${genre}</td>
+      <td style="font-size:10px;white-space:nowrap">${sub}</td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(v)}</td>
+      <td><div style="width:${barW}px;height:8px;background:${bg};border-radius:4px;min-width:4px"></div></td>
+    </tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('hm-wrap').innerHTML=h;
+}
+
+// ── PUBLISHERS ───────────────────────────────────────────
+function buildPublishers(){
+  const pd = D.publisher;
+  const f = getFilters();
+  const filtered = pd.filter(r=>(!f.pc||r.publisher_country===f.pc));
+
+  // Aggregate by publisher
+  const pubMap={};
+  filtered.forEach(r=>{
+    if(!pubMap[r.publisher]) pubMap[r.publisher]={rev:0,dl:0,country:r.publisher_country,games:new Set()};
+    pubMap[r.publisher].rev+=r.rev;
+    pubMap[r.publisher].dl+=r.dl;
+    pubMap[r.publisher].games.add(r.game_count);
+  });
+  const topPubs = Object.entries(pubMap).sort((a,b)=>b[1].rev-a[1].rev).slice(0,10);
+
+  mkDonut('c-pub-d',topPubs.map(e=>e[0]).slice(0,6),topPubs.slice(0,6).map(e=>e[1].rev),COLORS);
+  document.getElementById('pub-legend').innerHTML = topPubs.slice(0,6).map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name" style="font-size:10px">${k.substring(0,18)}</div><div class="dl-val">${fmtR(v.rev)}</div></div>`).join('');
+
+  // Country donut
+  const ctryMap={};
+  filtered.forEach(r=>{ ctryMap[r.publisher_country]=(ctryMap[r.publisher_country]||0)+r.rev; });
+  const topCtry = topN(ctryMap,6);
+  mkDonut('c-pubcountry-d',topCtry.map(e=>e[0]),topCtry.map(e=>e[1]),COLORS);
+  document.getElementById('pubcountry-legend').innerHTML = topCtry.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
+
+  // Table
+  const tb = document.getElementById('pub-tb');
+  tb.innerHTML='';
+  topPubs.forEach(([name,v],i)=>{
+    tb.innerHTML+=`<tr>
+      <td><span class="rnk r${i<3?i+1:'n'}">${i+1}</span></td>
+      <td style="font-weight:500">${name}</td>
+      <td style="color:var(--t2)">${v.country||'—'}</td>
+      <td style="text-align:center">${v.games.size||'—'}</td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(v.rev)}</td>
+      <td>${fmt(v.dl)}</td>
+    </tr>`;
+  });
+}
+
+// ── LEADERBOARD ──────────────────────────────────────────
+function renderLb(){
+  lbPage=0;
+  drawLb();
+}
+function drawLb(){
+  const s  = document.getElementById('lb-s').value;
+  let data = filterLb().sort((a,b)=>b[s]-a[s]);
+  const total = data.length;
+  const pages = Math.ceil(total/LB_PAGE_SIZE);
+  const slice = data.slice(lbPage*LB_PAGE_SIZE, (lbPage+1)*LB_PAGE_SIZE);
+
+  document.getElementById('lb-info').textContent=`${total} games · sorted by ${s.toUpperCase()} · page ${lbPage+1}/${pages||1}`;
+  document.getElementById('pg-info').textContent=`${lbPage*LB_PAGE_SIZE+1}–${Math.min((lbPage+1)*LB_PAGE_SIZE,total)} of ${total}`;
+
+  const tb=document.getElementById('lb-tb');
+  tb.innerHTML='';
+  slice.forEach((r,i)=>{
+    const pc=r.platform==='ios'?'p-ios':r.platform==='android'?'p-and':'p-both';
+    const rank=lbPage*LB_PAGE_SIZE+i+1;
+    tb.innerHTML+=`<tr>
+      <td><span class="rnk r${rank<=3?rank:'n'}">${rank}</span></td>
+      <td style="font-weight:500;white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis">${r.game||'—'}</td>
+      <td><span class="pill p-pub" style="max-width:100px;overflow:hidden;text-overflow:ellipsis;display:inline-block">${r.publisher||'—'}</span></td>
+      <td><span class="pill p-g">${r.genre||'—'}</span></td>
+      <td style="color:var(--t2);font-size:10px">${r.sub_genre||'—'}</td>
+      <td style="font-weight:600">${r.market||'—'}</td>
+      <td><span class="pill ${pc}">${r.platform==='ios'?'iOS':r.platform==='android'?'Android':'Both'}</span></td>
+      <td style="color:var(--t2)">${r.month||'—'}</td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(r.rev)}</td>
+      <td>${fmt(r.dl)}</td>
+      <td style="color:var(--t2)">$${r.rpd?.toFixed(3)??'—'}</td>
+      <td style="font-size:10px;color:var(--t2)">${r.publisher_country||'—'}</td>
+    </tr>`;
+  });
+
+  // Pagination buttons
+  const pbEl=document.getElementById('pg-btns');
+  pbEl.innerHTML='';
+  for(let i=0;i<Math.min(pages,5);i++){
+    pbEl.innerHTML+=`<button class="pg-btn${i===lbPage?' active':''}" onclick="goPage(${i})">${i+1}</button>`;
+  }
+  if(pages>5) pbEl.innerHTML+=`<span style="color:var(--t3);font-size:11px"> ... ${pages} pages</span>`;
+}
+function goPage(n){ lbPage=n; drawLb(); }
+function pgMove(d){
+  const data=filterLb();
+  const pages=Math.ceil(data.length/LB_PAGE_SIZE);
+  lbPage=Math.max(0,Math.min(pages-1,lbPage+d));
+  drawLb();
+}
+
+// ── TAB SWITCH ───────────────────────────────────────────
+function T(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(i===1) buildMarket();
+  if(i===2) buildTrends();
+  if(i===3) buildGenre();
+  if(i===4) buildPublishers();
+  if(i===5){ lbPage=0; renderLb(); }
+}
+</script>
+</body>
+</html>
