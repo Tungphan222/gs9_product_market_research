@@ -18,7 +18,7 @@
   --sh2:0 4px 20px rgba(60,115,99,.16);
   --r:12px;--r2:8px;--r3:6px;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:18px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:15px}
 h1,h2,h3,.serif{font-family:'Fraunces',serif}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
@@ -49,7 +49,7 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 .hdr{background:var(--card);border-bottom:1.5px solid var(--b);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:var(--sh)}
 .hdr-l{display:flex;align-items:center;gap:10px}
 .logo{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.hdr h1{font-size:26px;font-weight:500}.hdr h1 span{color:var(--accent)}
+.hdr h1{font-size:19px;font-weight:500}.hdr h1 span{color:var(--accent)}
 .hdr-r{display:flex;gap:8px;align-items:center}
 .badge{background:var(--al);color:var(--accent);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid rgba(60,115,99,.2)}
 .badge.ora{background:var(--ambbg);color:var(--amb);border-color:rgba(184,122,30,.2)}
@@ -60,8 +60,7 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 .fbar{background:var(--card);border-bottom:1px solid var(--b);padding:10px 24px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .fg{display:flex;flex-direction:column;gap:3px}
 .fg label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
-.fg label{font-size:13px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
-.fg select{padding:8px 12px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none;cursor:pointer;min-width:120px}
+.fg select{padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t);outline:none;cursor:pointer;min-width:110px}
 .fg select:focus{border-color:var(--accent)}
 .sep{width:1px;height:36px;background:var(--b)}
 .btn{padding:7px 16px;border:none;border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
@@ -70,7 +69,7 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 
 /* TABS */
 .tabs{display:flex;gap:2px;padding:14px 24px 0;background:var(--bg);border-bottom:2px solid var(--b);overflow-x:auto}
-.tab{padding:12px 22px;font-size:15px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
+.tab{padding:10px 20px;font-size:13px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
 .tab:hover{color:var(--accent);background:var(--al)}
 .tab.active{background:var(--card);color:var(--accent);border-color:var(--b);border-bottom-color:var(--card);font-weight:600}
 
@@ -92,17 +91,17 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 /* CARD */
 .card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:18px;box-shadow:var(--sh);transition:box-shadow .2s}
 .card:hover{box-shadow:var(--sh2)}
-.ct{font-family:'Fraunces',serif;font-size:18px;font-weight:500;margin-bottom:3px}
-.cs{font-size:14px;color:var(--t2);margin-bottom:14px}
+.ct{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:3px}
+.cs{font-size:12px;color:var(--t2);margin-bottom:14px}
 .cw{position:relative}
 .h160{height:160px}.h200{height:200px}.h220{height:220px}.h260{height:260px}
 
 /* SCORECARDS */
 .sc{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden}
 .sc-top{position:absolute;top:0;left:0;width:100%;height:3px}
-.sc-lbl{font-size:13px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.sc-val{font-family:'Fraunces',serif;font-size:38px;font-weight:500;line-height:1;margin-bottom:8px}
-.sc-val em{font-size:18px;font-weight:400;color:var(--t2);font-style:normal}
+.sc-lbl{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sc-val{font-family:'Fraunces',serif;font-size:32px;font-weight:500;line-height:1;margin-bottom:8px}
+.sc-val em{font-size:15px;font-weight:400;color:var(--t2);font-style:normal}
 .sc-foot{display:flex;gap:6px;flex-wrap:wrap}
 .tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
 .up{background:#E6F4EC;color:#1D7A3E}.dn{background:var(--redbg);color:var(--red)}.nt{background:var(--al);color:var(--accent)}
@@ -134,11 +133,11 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 
 /* TABLE */
 .tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:13px}
 thead tr{background:var(--bg)}
-th{padding:11px 13px;text-align:left;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
+th{padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
 th:hover{color:var(--accent)}
-td{padding:11px 13px;border-bottom:1px solid var(--b);vertical-align:middle}
+td{padding:10px 12px;border-bottom:1px solid var(--b);vertical-align:middle}
 tr:last-child td{border:none}
 tr:hover td{background:var(--al)}
 .rnk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:700}
@@ -191,7 +190,7 @@ tr:hover td{background:var(--al)}
       onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
     <div class="login-err" id="pw-err"></div>
-    <div class="login-hint">Contact Tungpnt for access</div>
+    <div class="login-hint">Contact GS9 team for access</div>
   </div>
 </div>
 
@@ -234,12 +233,13 @@ tr:hover td{background:var(--al)}
   <div class="tabs">
     <div class="tab active" onclick="T(0)">📋 Summary</div>
     <div class="tab" onclick="T(1)">🗺 Market Size</div>
-    <div class="tab" onclick="T(2)">🎯 Genre Intel</div>
-    <div class="tab" onclick="T(3)">🏢 Publishers</div>
-    <div class="tab" onclick="T(4)">🏆 Leaderboard</div>
+    <div class="tab" onclick="T(2)">📈 Trends</div>
+    <div class="tab" onclick="T(3)">🎯 Genre Intel</div>
+    <div class="tab" onclick="T(4)">🏢 Publishers</div>
+    <div class="tab" onclick="T(5)">🏆 Leaderboard</div>
   </div>
 
-  <!-- PANE 0: SUMMARY + TRENDS -->
+  <!-- PANE 0: SUMMARY -->
   <div class="pane active" id="p0">
     <div class="sec">
       <div class="sh"><div class="st">Executive Summary</div><div class="ss" id="sum-period"></div></div>
@@ -281,7 +281,7 @@ tr:hover td{background:var(--al)}
       </div>
     </div>
     <div class="sec">
-      <div class="g3">
+      <div class="g2">
         <div class="card">
           <div class="ct">Revenue by Market</div>
           <div class="cs">% contribution to total</div>
@@ -298,18 +298,29 @@ tr:hover td{background:var(--al)}
             <div class="dl" id="genre-legend"></div>
           </div>
         </div>
-        <div class="card">
-          <div class="ct">New Release vs Old Game</div>
-          <div class="cs">Revenue split by game age</div>
-          <div style="display:flex;gap:12px;align-items:center">
-            <div class="cw h160" style="flex:1"><canvas id="c-newold-d"></canvas></div>
-            <div class="dl" id="newold-legend"></div>
-          </div>
-        </div>
       </div>
     </div>
+  </div>
+
+  <!-- PANE 1: MARKET SIZE (static Newzoo data) -->
+  <div class="pane" id="p1">
     <div class="sec">
-      <div class="sh"><div class="st">Trend Analysis</div><div class="ss">Monthly breakdown</div></div>
+      <div class="sh"><div class="st">Market Size by Country</div><div class="ss">Source: Newzoo 2024</div></div>
+      <div class="g3" id="market-cards"></div>
+    </div>
+    <div class="sec">
+      <div class="card">
+        <div class="ct">Spent per Payer by Market</div>
+        <div class="cs">Higher = more valuable per user · SG leads at $182.8</div>
+        <div class="cw h200"><canvas id="c-spp"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 2: TRENDS -->
+  <div class="pane" id="p2">
+    <div class="sec">
+      <div class="sh"><div class="st">Trend Analysis</div><div class="ss">Based on your Sensor Tower data</div></div>
       <div class="g2">
         <div class="card">
           <div class="ct">Revenue Trend by Market</div>
@@ -337,44 +348,10 @@ tr:hover td{background:var(--al)}
         </div>
       </div>
     </div>
-    <div class="sec">
-      <div class="g2">
-        <div class="card">
-          <div class="ct">New Release vs Old Game — Revenue</div>
-          <div class="cs">Monthly REV split by game age · stacked</div>
-          <div class="cw h220"><canvas id="c-newold-rev"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="ct">New Release vs Old Game — Downloads</div>
-          <div class="cs">Monthly DL split by game age · stacked</div>
-          <div class="cw h220"><canvas id="c-newold-dl"></canvas></div>
-        </div>
-      </div>
-    </div>
-    <div class="sec">
-      <div class="card">
-        <div class="ct">New Release vs Old Game — Monthly Trend</div>
-        <div class="cs">Revenue contribution by game age over time · stacked bars</div>
-        <div class="cw h220"><canvas id="c-newold-trend"></canvas></div>
-        <div class="insight"><strong>New Release:</strong> game phát hành đúng tháng đó · <strong>Old Game:</strong> game đã phát hành từ tháng trước</div>
-      </div>
-    </div>
-  </div>
-    <div class="sec">
-      <div class="sh"><div class="st">Market Size by Country</div><div class="ss">Source: Newzoo 2024</div></div>
-      <div class="g3" id="market-cards"></div>
-    </div>
-    <div class="sec">
-      <div class="card">
-        <div class="ct">Spent per Payer by Market</div>
-        <div class="cs">Higher = more valuable per user · SG leads at $182.8</div>
-        <div class="cw h200"><canvas id="c-spp"></canvas></div>
-      </div>
-    </div>
   </div>
 
-  <!-- PANE 1: MARKET SIZE -->
-  <div class="pane" id="p1">
+  <!-- PANE 3: GENRE -->
+  <div class="pane" id="p3">
     <div class="sec">
       <div class="sh"><div class="st">Genre Intelligence</div><div class="ss">Download vs Revenue — Volume ≠ Monetization</div></div>
       <div class="g2" style="margin-bottom:14px">
@@ -402,8 +379,8 @@ tr:hover td{background:var(--al)}
     </div>
   </div>
 
-  <!-- PANE 2: GENRE -->
-  <div class="pane" id="p2">
+  <!-- PANE 4: PUBLISHERS -->
+  <div class="pane" id="p4">
     <div class="sec">
       <div class="sh"><div class="st">Publisher Performance</div><div class="ss">Based on your Sensor Tower data</div></div>
       <div class="g2" style="margin-bottom:14px">
@@ -435,32 +412,18 @@ tr:hover td{background:var(--al)}
     </div>
   </div>
 
-  <!-- PANE 3: PUBLISHERS -->
-  <div class="pane" id="p3">
+  <!-- PANE 5: LEADERBOARD -->
+  <div class="pane" id="p5">
     <div class="sec">
       <div class="sh"><div class="st">Top Games Leaderboard</div><div class="ss" id="lb-info"></div></div>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end">
         <div class="fg"><label>Search Game</label>
           <input type="text" id="lb-search" placeholder="Game name..." oninput="renderLb()"
-            style="padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;min-width:160px;background:var(--bg)"></div>
+            style="padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;min-width:160px;background:var(--bg)"></div>
         <div class="fg"><label>Genre</label><select id="lb-g" onchange="renderLb()"><option value="">All</option></select></div>
         <div class="fg"><label>Market</label><select id="lb-m" onchange="renderLb()"><option value="">All</option></select></div>
-        <div class="fg"><label>Platform</label>
-          <select id="lb-p" onchange="renderLb()">
-            <option value="combined">All (Combined)</option>
-            <option value="break">Break by Platform</option>
-            <option value="ios">iOS only</option>
-            <option value="android">Android only</option>
-          </select>
-        </div>
+        <div class="fg"><label>Platform</label><select id="lb-p" onchange="renderLb()"><option value="">All</option></select></div>
         <div class="fg"><label>Month</label><select id="lb-mo" onchange="renderLb()"><option value="">All</option></select></div>
-        <div class="fg"><label>Game Age</label>
-          <select id="lb-age" onchange="renderLb()">
-            <option value="">All</option>
-            <option value="New Release">New Release</option>
-            <option value="Old Game">Old Game</option>
-          </select>
-        </div>
         <div class="fg"><label>Sort by</label>
           <select id="lb-s" onchange="renderLb()">
             <option value="rev">Revenue ↓</option>
@@ -473,7 +436,7 @@ tr:hover td{background:var(--al)}
         <div class="tw"><table>
           <thead><tr>
             <th>#</th><th>Game</th><th>Publisher</th><th>Genre</th><th>Sub-genre</th>
-            <th>Market</th><th>Platform</th><th>Month</th><th>Game Age</th>
+            <th>Market</th><th>Platform</th><th>Month</th>
             <th>Revenue ($)</th><th>Downloads</th><th>RPD</th><th>Pub.Country</th>
           </tr></thead>
           <tbody id="lb-tb"></tbody>
@@ -527,7 +490,7 @@ const COLORS=['#3C7363','#1E6FA8','#6B3FA0','#B87A1E','#B83232','#2D7A4F','#4A90
 const fmt=n=>n>=1e9?`${(n/1e9).toFixed(1)}B`:n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(0)}K`:n?.toFixed?.(0)??'—';
 const fmtR=n=>n>=1e6?`$${(n/1e6).toFixed(1)}M`:n>=1e3?`$${(n/1e3).toFixed(0)}K`:`$${n?.toFixed?.(0)??'—'}`;
 Chart.defaults.font.family="'DM Sans',sans-serif";
-Chart.defaults.font.size=14;Chart.defaults.color='#6B6860';
+Chart.defaults.font.size=13;Chart.defaults.color='#6B6860';
 
 // ── GLOBAL STATE ─────────────────────────────────────────
 let D = {}; // all loaded data
@@ -574,6 +537,7 @@ function buildFilters(){
   populateSelect('f-pc',   f.pub_countries,false);
   populateSelect('lb-g',   f.genres,       false);
   populateSelect('lb-m',   f.markets,      false);
+  populateSelect('lb-p',   f.platforms,    false);
   populateSelect('lb-mo',  f.months,       true);
 }
 function populateSelect(id, vals, reverseOrder=false){
@@ -604,7 +568,7 @@ function filterTrends(){
     (!f.plat || r.platform=== f.plat)
   );
 }
-function filterGenreData(){
+function filterGenre(){
   const f = getFilters();
   return D.genre.filter(r=>
     (!f.mo    || r.month   === f.mo)    &&
@@ -618,7 +582,7 @@ function filterLb(){
   const p  = document.getElementById('lb-p').value;
   const mo = document.getElementById('lb-mo').value;
   const s  = document.getElementById('lb-search').value.toLowerCase();
-  const age  = document.getElementById('lb-age').value;
+  const f  = getFilters();
   return D.leaderboard.filter(r=>
     (!g  || r.genre   === g)  &&
     (!m  || r.market  === m)  &&
@@ -718,6 +682,11 @@ function uniqueMonths(arr){
 // ── BUILD APP ────────────────────────────────────────────
 function buildApp(){
   buildSummary();
+  if(document.getElementById('p1').classList.contains('active')) buildMarket();
+  if(document.getElementById('p2').classList.contains('active')) buildTrends();
+  if(document.getElementById('p3').classList.contains('active')) buildGenre();
+  if(document.getElementById('p4').classList.contains('active')) buildPublishers();
+  if(document.getElementById('p5').classList.contains('active')){ lbPage=0; renderLb(); }
 }
 
 // ── SUMMARY ──────────────────────────────────────────────
@@ -778,26 +747,7 @@ function buildSummary(){
   document.getElementById('mkt-legend').innerHTML = mktEntries.map(([k,v],i)=>
     `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
 
-  // New/Old donut
-  const newOldRev = groupBy(td,'game_age','rev');
-  const noEntries = [['New Release', newOldRev['New Release']||0],['Old Game', newOldRev['Old Game']||0]];
-  mkDonut('c-newold-d',noEntries.map(e=>e[0]),noEntries.map(e=>e[1]),['#3C7363','#D4CEC4']);
-  document.getElementById('newold-legend').innerHTML = noEntries.map(([k,v],i)=>
-    `<div class="dl-row"><div class="dl-dot" style="background:${['#3C7363','#D4CEC4'][i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
-
-  // New/Old monthly trend stacked
-  destroyChart('c-newold-trend');
-  charts['c-newold-trend']=new Chart(document.getElementById('c-newold-trend'),{type:'bar',
-    data:{labels:months,datasets:[
-      {label:'New Release',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='New Release').reduce((a,r)=>a+r.rev,0)),
-        backgroundColor:'rgba(60,115,99,.8)',stack:'s',borderRadius:3},
-      {label:'Old Game',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='Old Game').reduce((a,r)=>a+r.rev,0)),
-        backgroundColor:'rgba(212,206,196,.8)',stack:'s',borderRadius:3}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:12}}}},
-      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},
-        y:{stacked:true,grid:{color:'#EEE8DE'},ticks:{font:{size:11},callback:v=>fmtR(v)}}}}});
+  // Genre donut
   const gd = filterGenre();
   const genreRev = groupBy(gd,'genre','rev');
   const genreEntries = topN(genreRev,8);
@@ -857,21 +807,7 @@ function buildTrends(){
     data:months.map(mo=>td.filter(r=>r.month===mo&&r.country===m).reduce((a,r)=>a+r.dl,0))
   })));
 
-  // New/Old REV trend
-  mkBar('c-newold-rev',months,[
-    {label:'New Release',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='New Release').reduce((a,r)=>a+r.rev,0)),
-      backgroundColor:'rgba(60,115,99,.8)',stack:'s',borderRadius:3},
-    {label:'Old Game',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='Old Game').reduce((a,r)=>a+r.rev,0)),
-      backgroundColor:'rgba(212,206,196,.8)',stack:'s',borderRadius:3}
-  ],true);
-
-  // New/Old DL trend
-  mkBar('c-newold-dl',months,[
-    {label:'New Release',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='New Release').reduce((a,r)=>a+r.dl,0)),
-      backgroundColor:'rgba(60,115,99,.8)',stack:'s',borderRadius:3},
-    {label:'Old Game',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='Old Game').reduce((a,r)=>a+r.dl,0)),
-      backgroundColor:'rgba(212,206,196,.8)',stack:'s',borderRadius:3}
-  ],true);
+  // Platform stacked
   const plats=[...new Set(td.map(r=>r.platform))];
   mkBar('c-plat-stk',months,plats.map((p,i)=>({
     label:p,backgroundColor:COLORS[i],stack:'s',
@@ -890,7 +826,7 @@ function buildTrends(){
 
 // ── GENRE ────────────────────────────────────────────────
 function buildGenre(){
-  const gd = filterGenreData();
+  const gd = filterGenre();
   const genreRev = groupBy(gd,'genre','rev');
   const genreDl  = groupBy(gd,'genre','dl');
   const topG = topN(genreRev,8).map(e=>e[0]);
@@ -906,37 +842,26 @@ function buildGenre(){
     {label:'REV Share %',data:topG.map(g=>+((genreRev[g]||0)/totalRev*100).toFixed(1)),backgroundColor:'rgba(60,115,99,.7)',borderRadius:3}
   ],false);
 
-  // SubGenre heatmap — REV + DL
-  const subMap={};
+  // SubGenre heatmap
+  const subRev={};
   gd.forEach(r=>{
     const k=`${r.genre}|||${r.sub_genre}`;
-    if(!subMap[k]) subMap[k]={rev:0,dl:0};
-    subMap[k].rev+=r.rev;
-    subMap[k].dl +=r.dl;
+    subRev[k]=(subRev[k]||0)+r.rev;
   });
-  const topSub = Object.entries(subMap).sort((a,b)=>b[1].rev-a[1].rev).slice(0,15);
-  const maxRev = Math.max(...topSub.map(e=>e[1].rev))||1;
-  const maxDl  = Math.max(...topSub.map(e=>e[1].dl))||1;
-  let h=`<table><thead><tr>
-    <th>Genre</th><th>Sub-genre</th>
-    <th>Total REV</th><th>REV Visual</th>
-    <th>Total DL</th><th>DL Visual</th>
-  </tr></thead><tbody>`;
+  const topSub = Object.entries(subRev).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const maxV = Math.max(...topSub.map(e=>e[1]))||1;
+  let h=`<table><thead><tr><th>Genre</th><th>Sub-genre</th><th>Total REV</th><th>Visual</th></tr></thead><tbody>`;
   topSub.forEach(([k,v])=>{
     const [genre,sub]=k.split('|||');
-    const pRev=v.rev/maxRev;
-    const pDl =v.dl/maxDl;
-    const revBg=`rgba(60,115,99,${.08+pRev*.8})`;
-    const dlBg =`rgba(30,111,168,${.08+pDl*.8})`;
-    const revTc=pRev>.5?'#fff':'#2C2C2A';
-    const dlTc =pDl>.5?'#fff':'#2C2C2A';
+    const pct=v/maxV;
+    const bg=`rgba(60,115,99,${.08+pct*.8})`;
+    const tc=pct>.5?'#fff':'#2C2C2A';
+    const barW=Math.round(pct*200);
     h+=`<tr>
-      <td style="font-weight:600;font-size:12px;color:var(--t2);white-space:nowrap">${genre}</td>
-      <td style="font-size:12px;white-space:nowrap">${sub}</td>
-      <td style="font-weight:700;color:var(--accent);font-size:13px">${fmtR(v.rev)}</td>
-      <td><div style="width:${Math.round(pRev*180)+4}px;height:10px;background:${revBg};border-radius:5px"></div></td>
-      <td style="font-weight:700;color:var(--blue);font-size:13px">${fmt(v.dl)}</td>
-      <td><div style="width:${Math.round(pDl*180)+4}px;height:10px;background:${dlBg};border-radius:5px"></div></td>
+      <td style="font-weight:600;font-size:10px;color:var(--t2);white-space:nowrap">${genre}</td>
+      <td style="font-size:10px;white-space:nowrap">${sub}</td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(v)}</td>
+      <td><div style="width:${barW}px;height:8px;background:${bg};border-radius:4px;min-width:4px"></div></td>
     </tr>`;
   });
   h+='</tbody></table>';
@@ -1042,11 +967,11 @@ function pgMove(d){
 function T(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
-  if(i===0) buildSummary();
   if(i===1) buildMarket();
-  if(i===2) buildGenre();
-  if(i===3) buildPublishers();
-  if(i===4){ lbPage=0; renderLb(); }
+  if(i===2) buildTrends();
+  if(i===3) buildGenre();
+  if(i===4) buildPublishers();
+  if(i===5){ lbPage=0; renderLb(); }
 }
 </script>
 </body>
