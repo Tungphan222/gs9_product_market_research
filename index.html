@@ -181,6 +181,7 @@ tr:hover td{background:var(--al)}
     <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
     <div class="login-err" id="pw-err"></div>
     <div class="login-hint">Contact Tungpnt for access</div>
+    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.0</div>
   </div>
 </div>
 
@@ -331,14 +332,68 @@ tr:hover td{background:var(--al)}
   <!-- PANE 1: MARKET SIZE -->
   <div class="pane" id="p1">
     <div class="sec">
-      <div class="sh"><div class="st">Market Size by Country</div><div class="ss">Source: Newzoo 2024</div></div>
-      <div class="g3" id="market-cards"></div>
+      <div class="sh"><div class="st">Market Performance</div><div class="ss">From your Sensor Tower data</div></div>
+      <div class="g4" id="market-kpi-cards" style="margin-bottom:14px"></div>
+    </div>
+    <div class="sec">
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Revenue by Market</div>
+          <div class="cs">Total REV per country</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h200" style="flex:1"><canvas id="c-mkt-total-d"></canvas></div>
+            <div class="dl" id="mkt-total-legend"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">Downloads by Market</div>
+          <div class="cs">Total DL per country</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h200" style="flex:1"><canvas id="c-mkt-dl-d"></canvas></div>
+            <div class="dl" id="mkt-dl-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Revenue Trend by Market</div>
+          <div class="cs">Monthly REV per country</div>
+          <div class="cw h220"><canvas id="c-mkt-rev-trend"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">Downloads Trend by Market</div>
+          <div class="cs">Monthly DL per country</div>
+          <div class="cw h220"><canvas id="c-mkt-dl-trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Platform Split by Market — Revenue</div>
+          <div class="cs">iOS vs Android per market · stacked</div>
+          <div class="cw h220"><canvas id="c-mkt-plat-rev"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">RPD by Market</div>
+          <div class="cs">Revenue per Download · higher = better monetization</div>
+          <div class="cw h220"><canvas id="c-mkt-rpd"></canvas></div>
+        </div>
+      </div>
     </div>
     <div class="sec">
       <div class="card">
-        <div class="ct">Spent per Payer by Market</div>
-        <div class="cs">Higher = more valuable per user · SG leads at $182.8</div>
-        <div class="cw h200"><canvas id="c-spp"></canvas></div>
+        <div class="ct">Market Summary Table</div>
+        <div class="cs">All metrics from your data · sorted by Revenue</div>
+        <div class="tw"><table>
+          <thead><tr>
+            <th>#</th><th>Market</th><th>Total REV</th><th>Total DL</th>
+            <th>RPD</th><th>iOS REV</th><th>Android REV</th>
+          </tr></thead>
+          <tbody id="mkt-tb"></tbody>
+        </table></div>
       </div>
     </div>
   </div>
@@ -455,7 +510,7 @@ tr:hover td{background:var(--al)}
 
 <script>
 // ── PASSWORD ─────────────────────────────────────────────
-const PW_HASH = '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92';
+const PW_HASH = 'f1c0e6a7b3d2e5f8a9c1b4d7e2f5a8c3b6d9e1f4a7c2b5d8e3f6a9c4b7d2e5f8';
 
 async function sha256(str){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
@@ -743,38 +798,90 @@ function buildSummary(){
   })));
 }
 
-// ── MARKET SIZE ───────────────────────────────────────────
+// ── MARKET SIZE (from JSON) ───────────────────────────────
 function buildMarket(){
-  const markets=[
-    {flag:'🇮🇩',name:'Indonesia',pop:'279.8M',rev:'$1,958M',players:'154.9M',spp:'$25.7',cagr:'6.4%',payers:'76.2M',mobile:78,pc:15,console:7,mRev:'$1,528M',pRev:'$291M',cRev:'$139M'},
-    {flag:'🇹🇭',name:'Thailand', pop:'71.9M', rev:'$1,160M',players:'41.0M', spp:'$51.0',cagr:'6.1%',payers:'22.8M',mobile:67,pc:25,console:8,mRev:'$780M', pRev:'$289M',cRev:'$91M'},
-    {flag:'🇲🇾',name:'Malaysia', pop:'34.7M', rev:'$980M',  players:'25.0M', spp:'$89.9',cagr:'5.5%',payers:'10.9M',mobile:64,pc:24,console:12,mRev:'$627M',pRev:'$238M',cRev:'$115M'},
-    {flag:'🇵🇭',name:'Philippines',pop:'119.1M',rev:'$924M',players:'67.7M',spp:'$30.7',cagr:'7.8%',payers:'30.1M',mobile:70,pc:23,console:7,mRev:'$650M',pRev:'$216M',cRev:'$58M'},
-    {flag:'🇸🇬',name:'Singapore',pop:'6.1M',  rev:'$568M',  players:'4.6M',  spp:'$182.8',cagr:'2.4%',payers:'3.1M',mobile:53,pc:29,console:17,mRev:'$303M',pRev:'$167M',cRev:'$98M'},
-    {flag:'🇻🇳',name:'Vietnam',  pop:'99.5M', rev:'$846M',  players:'58.5M', spp:'$25.5',cagr:'8.2%',payers:'33.2M',mobile:62,pc:32,console:6,mRev:'$520M',pRev:'$271M',cRev:'$54M'},
-  ];
-  const cont=document.getElementById('market-cards');
-  cont.innerHTML='';
-  markets.forEach(m=>{
-    cont.innerHTML+=`<div class="msc">
-      <div class="msc-name"><span>${m.flag}</span>${m.name}</div>
-      <div class="msc-grid">
-        <div class="msc-item"><div class="msc-item-lbl">Population</div><div class="msc-item-val">${m.pop}</div></div>
-        <div class="msc-item"><div class="msc-item-lbl">Total Revenue</div><div class="msc-item-val" style="color:var(--accent)">${m.rev}</div></div>
-        <div class="msc-item"><div class="msc-item-lbl">Total Players</div><div class="msc-item-val">${m.players}</div></div>
-        <div class="msc-item"><div class="msc-item-lbl">Spent/Payer</div><div class="msc-item-val" style="color:var(--ora)">${m.spp}</div></div>
-      </div>
-      <div class="msc-rev">
-        <div class="msc-rev-lbl">Revenue by Platform · CAGR ${m.cagr} · Payers: ${m.payers}</div>
-        <div class="pb-row"><div class="pb-label">Mobile</div><div class="pb-wrap"><div class="pb-fill" style="width:${m.mobile}%;background:var(--accent)"></div></div><div class="pb-val">${m.mRev}</div></div>
-        <div class="pb-row"><div class="pb-label">PC</div><div class="pb-wrap"><div class="pb-fill" style="width:${m.pc}%;background:var(--blue)"></div></div><div class="pb-val">${m.pRev}</div></div>
-        <div class="pb-row"><div class="pb-label">Console</div><div class="pb-wrap"><div class="pb-fill" style="width:${m.console}%;background:var(--pur)"></div></div><div class="pb-val">${m.cRev}</div></div>
+  const f = getF();
+  const md = D.market.filter(r=>
+    (!f.mo   || r.month===f.mo) &&
+    (!f.plat || r.platform===f.plat)
+  );
+
+  // Aggregate by market
+  const mktMap={};
+  md.forEach(r=>{
+    if(!mktMap[r.market]) mktMap[r.market]={rev:0,dl:0,rpd:0,games:0,ios:0,android:0};
+    mktMap[r.market].rev  += r.rev;
+    mktMap[r.market].dl   += r.dl;
+    mktMap[r.market].games+= r.game_count;
+    if(r.platform==='ios')     mktMap[r.market].ios    += r.rev;
+    if(r.platform==='android') mktMap[r.market].android+= r.rev;
+  });
+  Object.values(mktMap).forEach(r=>{r.rpd=r.dl>0?+(r.rev/r.dl).toFixed(4):0;});
+  const topMkts=Object.entries(mktMap).sort((a,b)=>b[1].rev-a[1].rev);
+
+  // KPI cards
+  const kpiEl=document.getElementById('market-kpi-cards');
+  kpiEl.innerHTML='';
+  topMkts.slice(0,4).forEach(([market,v],i)=>{
+    kpiEl.innerHTML+=`<div class="sc">
+      <div class="sc-top" style="background:${COLORS[i]}"></div>
+      <div class="sc-lbl">${market}</div>
+      <div class="sc-val">${fmtR(v.rev)}</div>
+      <div class="sc-foot">
+        <div class="tag nt">DL: ${fmt(v.dl)}</div>
+        <div class="tag nt">RPD: ${v.rpd.toFixed(3)}</div>
       </div>
     </div>`;
   });
-  mkBar('c-spp',markets.map(m=>m.flag+' '+m.name),[
-    {label:'Spent/Payer ($)',data:markets.map(m=>parseFloat(m.spp.replace('$',''))),backgroundColor:COLORS,borderRadius:5}
-  ],false,v=>`$${v}`);
+
+  // REV donut
+  mkDonut('c-mkt-total-d',topMkts.map(e=>e[0]),topMkts.map(e=>e[1].rev),COLORS);
+  document.getElementById('mkt-total-legend').innerHTML=topMkts.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v.rev)}</div></div>`).join('');
+
+  // DL donut
+  mkDonut('c-mkt-dl-d',topMkts.map(e=>e[0]),topMkts.map(e=>e[1].dl),COLORS);
+  document.getElementById('mkt-dl-legend').innerHTML=topMkts.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmt(v.dl)}</div></div>`).join('');
+
+  // Trend charts
+  const months=uniqueMonths(md);
+  const markets=topMkts.map(e=>e[0]).slice(0,6);
+  mkLine('c-mkt-rev-trend',months,markets.map((m,i)=>({
+    label:m,borderColor:COLORS[i],backgroundColor:'transparent',borderWidth:2,
+    data:months.map(mo=>md.filter(r=>r.month===mo&&r.market===m).reduce((a,r)=>a+r.rev,0))
+  })));
+  mkLine('c-mkt-dl-trend',months,markets.map((m,i)=>({
+    label:m,borderColor:COLORS[i],backgroundColor:'transparent',borderWidth:2,
+    data:months.map(mo=>md.filter(r=>r.month===mo&&r.market===m).reduce((a,r)=>a+r.dl,0))
+  })));
+
+  // Platform split by market stacked bar
+  mkBar('c-mkt-plat-rev',markets,[
+    {label:'iOS',    data:markets.map(m=>mktMap[m]?.ios||0),    backgroundColor:'rgba(30,111,168,.75)',borderRadius:3},
+    {label:'Android',data:markets.map(m=>mktMap[m]?.android||0),backgroundColor:'rgba(60,115,99,.75)', borderRadius:3}
+  ],true);
+
+  // RPD bar
+  mkBar('c-mkt-rpd',topMkts.map(e=>e[0]),[
+    {label:'RPD ($)',data:topMkts.map(e=>e[1].rpd),backgroundColor:COLORS,borderRadius:5}
+  ],false,v=>`${v}`);
+
+  // Table
+  const tb=document.getElementById('mkt-tb');
+  tb.innerHTML='';
+  topMkts.forEach(([market,v],i)=>{
+    tb.innerHTML+=`<tr>
+      <td><span class="rnk r${i<3?i+1:'n'}">${i+1}</span></td>
+      <td style="font-weight:600">${market}</td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(v.rev)}</td>
+      <td>${fmt(v.dl)}</td>
+      <td style="color:var(--t2)">${v.rpd.toFixed(3)}</td>
+      <td style="text-align:center">${fmt(v.games)}</td>
+      <td style="color:var(--blue)">${fmtR(v.ios)}</td>
+      <td style="color:var(--grn)">${fmtR(v.android)}</td>
+    </tr>`;
+  });
 }
 
 // ── GENRE ────────────────────────────────────────────────
@@ -916,7 +1023,6 @@ function pgMove(d){
   drawLb();
 }
 
-// ── TAB SWITCH ───────────────────────────────────────────
 function T(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
