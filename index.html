@@ -604,7 +604,7 @@ function filterTrends(){
     (!f.plat || r.platform=== f.plat)
   );
 }
-function filterGenre(){
+function filterGenreData(){
   const f = getFilters();
   return D.genre.filter(r=>
     (!f.mo    || r.month   === f.mo)    &&
@@ -718,10 +718,6 @@ function uniqueMonths(arr){
 // ── BUILD APP ────────────────────────────────────────────
 function buildApp(){
   buildSummary();
-  if(document.getElementById('p1').classList.contains('active')) buildMarket();
-  if(document.getElementById('p2').classList.contains('active')) buildGenre();
-  if(document.getElementById('p3').classList.contains('active')) buildPublishers();
-  if(document.getElementById('p4').classList.contains('active')){ lbPage=0; renderLb(); }
 }
 
 // ── SUMMARY ──────────────────────────────────────────────
@@ -894,7 +890,7 @@ function buildTrends(){
 
 // ── GENRE ────────────────────────────────────────────────
 function buildGenre(){
-  const gd = filterGenre();
+  const gd = filterGenreData();
   const genreRev = groupBy(gd,'genre','rev');
   const genreDl  = groupBy(gd,'genre','dl');
   const topG = topN(genreRev,8).map(e=>e[0]);
@@ -1046,6 +1042,7 @@ function pgMove(d){
 function T(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(i===0) buildSummary();
   if(i===1) buildMarket();
   if(i===2) buildGenre();
   if(i===3) buildPublishers();
