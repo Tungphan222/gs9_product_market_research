@@ -548,6 +548,7 @@ Chart.defaults.font.family="'DM Sans',sans-serif";
 Chart.defaults.font.size=13;Chart.defaults.color='#6B6860';
 
 let D={},charts={},lbPage=0;
+const built={market:false,genre:false,publishers:false};
 const LB_PAGE_SIZE=50;
 
 // ── LOAD DATA ────────────────────────────────────────────
@@ -566,12 +567,6 @@ async function initApp(){
     D={summary,trends,genre,publisher,leaderboard,filters};
     buildFilters();
     buildSummary();
-    // Pre-build các tab khác để sẵn sàng khi user click
-    setTimeout(()=>{
-      buildMarket();
-      buildGenre();
-      buildPublishers();
-    }, 200);
   }catch(e){alert('Error loading data: '+e.message);console.error(e);}
   document.getElementById('loading').style.display='none';
   document.getElementById('app').style.display='block';
@@ -1033,9 +1028,9 @@ function T(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
   if(i===0) buildSummary();
-  if(i===1) buildMarket();
-  if(i===2) buildGenre();
-  if(i===3) buildPublishers();
+  if(i===1){if(!built.market){buildMarket();built.market=true;}else buildMarket();}
+  if(i===2){if(!built.genre){buildGenre();built.genre=true;}else buildGenre();}
+  if(i===3){if(!built.publishers){buildPublishers();built.publishers=true;}else buildPublishers();}
   if(i===4){lbPage=0;renderLb();}
 }
 </script>
