@@ -163,6 +163,32 @@ tr:hover td{background:var(--al)}
 .spark{display:inline-flex;align-items:flex-end;gap:2px;height:20px}
 .sb{width:3px;border-radius:2px;background:var(--accent);opacity:.5}
 .sb.last{opacity:1}
+
+/* MARKET DETAIL CARDS (hình 1 style) */
+.mdc{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.mdc-bar{position:absolute;top:0;left:0;width:100%;height:4px}
+.mdc-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.mdc-flag{font-size:18px;line-height:1}
+.mdc-name{font-family:'Fraunces',serif;font-size:16px;font-weight:500}
+.mdc-code{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;background:var(--bg);border-radius:4px;padding:1px 5px}
+.mdc-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.mdc-kpi{background:var(--bg);border-radius:var(--r3);padding:8px 10px}
+.mdc-kpi-lbl{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.mdc-kpi-val{font-family:'Fraunces',serif;font-size:18px;font-weight:500;line-height:1}
+.mdc-kpi-val.accent{color:var(--accent)}
+.mdc-kpi-val.blue{color:var(--blue)}
+.mdc-kpi-val.amber{color:var(--amb)}
+.mdc-plat{margin-bottom:0}
+.mdc-plat-lbl{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.mdc-pb-row{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.mdc-pb-name{font-size:11px;color:var(--t2);width:56px;flex-shrink:0}
+.mdc-pb-wrap{flex:1;height:5px;background:var(--b);border-radius:3px;overflow:hidden}
+.mdc-pb-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.mdc-pb-val{font-size:11px;font-weight:600;width:52px;text-align:right;flex-shrink:0}
+.mdc-rpd-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--b)}
+.mdc-rpd-lbl{font-size:11px;color:var(--t2)}
+.mdc-rpd-val{font-size:12px;font-weight:700;color:var(--pur)}
+.g3-mdc{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 </style>
 </head>
 <body>
@@ -331,30 +357,14 @@ tr:hover td{background:var(--al)}
 
   <!-- PANE 1: MARKET SIZE -->
   <div class="pane" id="p1">
+
+    <!-- SECTION 1: Market Detail Cards (hình 1 style) -->
     <div class="sec">
-      <div class="sh"><div class="st">Market Performance</div><div class="ss">From your Sensor Tower data</div></div>
-      <div class="g4" id="market-kpi-cards" style="margin-bottom:14px"></div>
+      <div class="sh"><div class="st">Market Overview</div><div class="ss">REV · DL · RPD · Platform split per market</div></div>
+      <div class="g3-mdc" id="mkt-detail-cards"></div>
     </div>
-    <div class="sec">
-      <div class="g2">
-        <div class="card">
-          <div class="ct">Revenue by Market</div>
-          <div class="cs">Total REV per country</div>
-          <div style="display:flex;gap:12px;align-items:center">
-            <div class="cw h200" style="flex:1"><canvas id="c-mkt-total-d"></canvas></div>
-            <div class="dl" id="mkt-total-legend"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="ct">Downloads by Market</div>
-          <div class="cs">Total DL per country</div>
-          <div style="display:flex;gap:12px;align-items:center">
-            <div class="cw h200" style="flex:1"><canvas id="c-mkt-dl-d"></canvas></div>
-            <div class="dl" id="mkt-dl-legend"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <!-- SECTION 2: Trend charts -->
     <div class="sec">
       <div class="g2">
         <div class="card">
@@ -369,24 +379,54 @@ tr:hover td{background:var(--al)}
         </div>
       </div>
     </div>
+
+    <!-- SECTION 3: Top Games per Market -->
     <div class="sec">
-      <div class="g2">
-        <div class="card">
-          <div class="ct">Platform Split by Market — Revenue</div>
-          <div class="cs">iOS vs Android per market · stacked</div>
-          <div class="cw h220"><canvas id="c-mkt-plat-rev"></canvas></div>
-        </div>
-        <div class="card">
-          <div class="ct">RPD by Market</div>
-          <div class="cs">Revenue per Download · higher = better monetization</div>
-          <div class="cw h220"><canvas id="c-mkt-rpd"></canvas></div>
+      <div class="sh"><div class="st">Top Games by Market</div><div class="ss">Top 15 games · sorted by Revenue</div></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:flex-end">
+        <div class="fg"><label>Market</label>
+          <select id="tg-mkt" onchange="renderTopGames()" style="padding:7px 10px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;min-width:140px">
+            <option value="">All Markets</option>
+          </select>
         </div>
       </div>
+      <div class="card" style="padding:0">
+        <div class="tw"><table>
+          <thead><tr>
+            <th>#</th><th>Game</th><th>Publisher</th><th>Genre</th>
+            <th>Platform</th><th>Revenue</th><th>Downloads</th><th>RPD</th>
+          </tr></thead>
+          <tbody id="tg-tb"></tbody>
+        </table></div>
+      </div>
     </div>
+
+    <!-- SECTION 4: Top Publishers per Market -->
+    <div class="sec">
+      <div class="sh"><div class="st">Top Publishers by Market</div><div class="ss">Top 15 publishers · sorted by Revenue</div></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:flex-end">
+        <div class="fg"><label>Market</label>
+          <select id="tp-mkt" onchange="renderTopPubs()" style="padding:7px 10px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;min-width:140px">
+            <option value="">All Markets</option>
+          </select>
+        </div>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="tw"><table>
+          <thead><tr>
+            <th>#</th><th>Publisher</th><th>Country</th>
+            <th>Games</th><th>Revenue</th><th>Downloads</th><th>RPD</th>
+          </tr></thead>
+          <tbody id="tp-tb"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Market Summary Table (giữ nguyên) -->
     <div class="sec">
       <div class="card">
         <div class="ct">Market Summary Table</div>
-        <div class="cs">All metrics from your data · sorted by Revenue</div>
+        <div class="cs">All metrics · sorted by Revenue</div>
         <div class="tw"><table>
           <thead><tr>
             <th>#</th><th>Market</th><th>Total REV</th><th>Total DL</th>
@@ -559,19 +599,14 @@ async function loadJSON(file){
 async function initApp(){
   document.getElementById('loading').style.display='flex';
   try{
-    const [summary,trends,genre,publisher,leaderboard,filters]=await Promise.all([
+    const [summary,trends,genre,publisher,leaderboard,filters,market]=await Promise.all([
       loadJSON('summary.json'),loadJSON('trends.json'),loadJSON('genre.json'),
       loadJSON('publisher.json'),loadJSON('leaderboard.json'),loadJSON('filters.json'),
+      loadJSON('market.json'),
     ]);
-    D={summary,trends,genre,publisher,leaderboard,filters};
+    D={summary,trends,genre,publisher,leaderboard,filters,market};
     buildFilters();
     buildSummary();
-    // Pre-build các tab khác để sẵn sàng khi user click
-    setTimeout(()=>{
-      buildMarket();
-      buildGenre();
-      buildPublishers();
-    }, 200);
   }catch(e){alert('Error loading data: '+e.message);console.error(e);}
   document.getElementById('loading').style.display='none';
   document.getElementById('app').style.display='block';
@@ -688,25 +723,24 @@ function mkDonut(id,labels,data,colors){
 }
 function mkLine(id,labels,datasets,isDl=false){
   destroyChart(id);
-  const fmtTip=isDl?(v=>fmt(v)):(v=>fmtR(v));
-  const fmtAxis=isDl?(v=>fmt(v)):(v=>fmtR(v));
+  const fmtV=isDl?fmt:fmtR;
   charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:12}}},
-        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtTip(ctx.parsed.y)}`}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtV(ctx.parsed.y)}`}}},
       scales:{x:{grid:{display:false},ticks:{font:{size:12}}},
-        y:{grid:{color:'#EEE8DE'},ticks:{font:{size:12},callback:v=>fmtAxis(v)}}},
+        y:{grid:{color:'#EEE8DE'},ticks:{font:{size:12},callback:v=>fmtV(v)}}},
       elements:{point:{radius:3,hoverRadius:5},line:{tension:.35}}}});
 }
 function mkBar(id,labels,datasets,stacked=false,ytick=null,isDl=false){
   destroyChart(id);
-  const fmtTip=isDl?(v=>fmt(v)):(v=>fmtR(v));
+  const fmtV=isDl?fmt:fmtR;
   charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:12}}},
-        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtTip(ctx.parsed.y)}`}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtV(ctx.parsed.y)}`}}},
       scales:{x:{stacked,grid:{display:false},ticks:{font:{size:12}}},
-        y:{stacked,grid:{color:'#EEE8DE'},ticks:{font:{size:12},callback:ytick||(isDl?(v=>fmt(v)):(v=>fmtR(v)))}}}}});
+        y:{stacked,grid:{color:'#EEE8DE'},ticks:{font:{size:12},callback:ytick||(v=>fmtV(v))}}}}});
 }
 
 // ── GROUP HELPERS ────────────────────────────────────────
@@ -794,7 +828,7 @@ function buildSummary(){
   })),true);
 
   const plats=[...new Set(td.map(r=>r.platform))];
-  // True 100% stacked: tính % revenue của mỗi platform theo từng tháng
+  // True 100% stacked — tính % revenue mỗi platform theo tháng
   const platPctData=plats.map((p,i)=>({
     label:p,backgroundColor:COLORS[i],stack:'s',
     data:months.map(mo=>{
@@ -823,53 +857,97 @@ function buildSummary(){
   })));
 }
 
-// ── MARKET SIZE (from JSON) ───────────────────────────────
-function buildMarket(){
-  const f = getF();
-  const md = D.market.filter(r=>
-    (!f.mo   || r.month===f.mo) &&
-    (!f.plat || r.platform===f.plat)
-  );
+// ── MARKET SIZE ──────────────────────────────────────────
+const MKT_FLAGS={'Indonesia':'🇮🇩','Thailand':'🇹🇭','Malaysia':'🇲🇾',
+  'Philippines':'🇵🇭','Singapore':'🇸🇬','Vietnam':'🇻🇳',
+  'Myanmar':'🇲🇲','Cambodia':'🇰🇭','Laos':'🇱🇦','Brunei':'🇧🇳'};
 
-  // Aggregate by market
+function buildMarket(){
+  const f=getF();
+  const md=D.market.filter(r=>
+    (!f.mo   ||r.month===f.mo)&&
+    (!f.plat ||r.platform===f.plat)
+  );
+  if(!md.length){
+    document.getElementById('mkt-detail-cards').innerHTML=
+      '<div style="color:var(--t3);font-size:13px;padding:12px;grid-column:1/-1">No data for selected filters.</div>';
+    return;
+  }
+
+  // ── Aggregate by market ──
   const mktMap={};
   md.forEach(r=>{
-    if(!mktMap[r.market]) mktMap[r.market]={rev:0,dl:0,rpd:0,games:0,ios:0,android:0};
-    mktMap[r.market].rev  += r.rev;
-    mktMap[r.market].dl   += r.dl;
-    mktMap[r.market].games+= r.game_count;
-    if(r.platform==='ios')     mktMap[r.market].ios    += r.rev;
-    if(r.platform==='android') mktMap[r.market].android+= r.rev;
+    if(!mktMap[r.market]) mktMap[r.market]={rev:0,dl:0,games:0,ios:0,android:0};
+    mktMap[r.market].rev   +=r.rev;
+    mktMap[r.market].dl    +=r.dl;
+    mktMap[r.market].games +=r.game_count||0;
+    if(r.platform==='ios')     mktMap[r.market].ios    +=r.rev;
+    if(r.platform==='android') mktMap[r.market].android+=r.rev;
   });
-  Object.values(mktMap).forEach(r=>{r.rpd=r.dl>0?+(r.rev/r.dl).toFixed(4):0;});
+  Object.values(mktMap).forEach(v=>{v.rpd=v.dl>0?+(v.rev/v.dl).toFixed(4):0;});
   const topMkts=Object.entries(mktMap).sort((a,b)=>b[1].rev-a[1].rev);
+  const maxRev=topMkts[0]?.[1]?.rev||1;
 
-  // KPI cards
-  const kpiEl=document.getElementById('market-kpi-cards');
-  kpiEl.innerHTML='';
-  topMkts.slice(0,4).forEach(([market,v],i)=>{
-    kpiEl.innerHTML+=`<div class="sc">
-      <div class="sc-top" style="background:${COLORS[i]}"></div>
-      <div class="sc-lbl">${market}</div>
-      <div class="sc-val">${fmtR(v.rev)}</div>
-      <div class="sc-foot">
-        <div class="tag nt">DL: ${fmt(v.dl)}</div>
-        <div class="tag nt">RPD: ${v.rpd.toFixed(3)}</div>
+  // ── Market Detail Cards ──
+  const cardEl=document.getElementById('mkt-detail-cards');
+  cardEl.innerHTML='';
+  topMkts.forEach(([market,v],i)=>{
+    const flag=MKT_FLAGS[market]||'🌏';
+    const code=market.substring(0,2).toUpperCase();
+    const pIos=v.rev>0?(v.ios/v.rev*100).toFixed(1):0;
+    const pAnd=v.rev>0?(v.android/v.rev*100).toFixed(1):0;
+    const maxPlat=Math.max(v.ios,v.android)||1;
+    // RPD highlight: top if >median
+    const allRpd=topMkts.map(e=>e[1].rpd).sort((a,b)=>a-b);
+    const medRpd=allRpd[Math.floor(allRpd.length/2)]||0;
+    const rpdClass=v.rpd>medRpd?'amber':'blue';
+    cardEl.innerHTML+=`
+    <div class="mdc">
+      <div class="mdc-bar" style="background:${COLORS[i%COLORS.length]}"></div>
+      <div class="mdc-head">
+        <span class="mdc-flag">${flag}</span>
+        <span class="mdc-name">${market}</span>
+        <span class="mdc-code">${code}</span>
+      </div>
+      <div class="mdc-kpis">
+        <div class="mdc-kpi">
+          <div class="mdc-kpi-lbl">Total Revenue</div>
+          <div class="mdc-kpi-val accent">${fmtR(v.rev)}</div>
+        </div>
+        <div class="mdc-kpi">
+          <div class="mdc-kpi-lbl">Total Downloads</div>
+          <div class="mdc-kpi-val blue">${fmt(v.dl)}</div>
+        </div>
+        <div class="mdc-kpi">
+          <div class="mdc-kpi-lbl">RPD</div>
+          <div class="mdc-kpi-val ${rpdClass}">$${v.rpd.toFixed(3)}</div>
+        </div>
+        <div class="mdc-kpi">
+          <div class="mdc-kpi-lbl">Games Tracked</div>
+          <div class="mdc-kpi-val">${fmt(v.games)}</div>
+        </div>
+      </div>
+      <div class="mdc-plat">
+        <div class="mdc-plat-lbl">Revenue by Platform</div>
+        <div class="mdc-pb-row">
+          <span class="mdc-pb-name">iOS</span>
+          <div class="mdc-pb-wrap"><div class="mdc-pb-fill" style="width:${(v.ios/maxPlat*100).toFixed(1)}%;background:#1E6FA8"></div></div>
+          <span class="mdc-pb-val" style="color:var(--blue)">${fmtR(v.ios)}</span>
+        </div>
+        <div class="mdc-pb-row">
+          <span class="mdc-pb-name">Android</span>
+          <div class="mdc-pb-wrap"><div class="mdc-pb-fill" style="width:${(v.android/maxPlat*100).toFixed(1)}%;background:#3C7363"></div></div>
+          <span class="mdc-pb-val" style="color:var(--accent)">${fmtR(v.android)}</span>
+        </div>
+        <div class="mdc-rpd-row">
+          <span class="mdc-rpd-lbl">iOS ${pIos}% · Android ${pAnd}%</span>
+          <span class="mdc-rpd-val">REV share</span>
+        </div>
       </div>
     </div>`;
   });
 
-  // REV donut
-  mkDonut('c-mkt-total-d',topMkts.map(e=>e[0]),topMkts.map(e=>e[1].rev),COLORS);
-  document.getElementById('mkt-total-legend').innerHTML=topMkts.map(([k,v],i)=>
-    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v.rev)}</div></div>`).join('');
-
-  // DL donut
-  mkDonut('c-mkt-dl-d',topMkts.map(e=>e[0]),topMkts.map(e=>e[1].dl),COLORS);
-  document.getElementById('mkt-dl-legend').innerHTML=topMkts.map(([k,v],i)=>
-    `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmt(v.dl)}</div></div>`).join('');
-
-  // Trend charts
+  // ── Trend charts ──
   const months=uniqueMonths(md);
   const markets=topMkts.map(e=>e[0]).slice(0,6);
   mkLine('c-mkt-rev-trend',months,markets.map((m,i)=>({
@@ -881,32 +959,102 @@ function buildMarket(){
     data:months.map(mo=>md.filter(r=>r.month===mo&&r.market===m).reduce((a,r)=>a+r.dl,0))
   })),true);
 
-  // Platform split by market stacked bar
-  mkBar('c-mkt-plat-rev',markets,[
-    {label:'iOS',    data:markets.map(m=>mktMap[m]?.ios||0),    backgroundColor:'rgba(30,111,168,.75)',borderRadius:3},
-    {label:'Android',data:markets.map(m=>mktMap[m]?.android||0),backgroundColor:'rgba(60,115,99,.75)', borderRadius:3}
-  ],true);
+  // ── Populate market selects for top games / top pubs ──
+  const mkts=topMkts.map(e=>e[0]);
+  ['tg-mkt','tp-mkt'].forEach(id=>{
+    const el=document.getElementById(id);
+    const cur=el.value;
+    el.innerHTML='<option value="">All Markets</option>';
+    mkts.forEach(m=>{el.innerHTML+=`<option value="${m}">${MKT_FLAGS[m]||'🌏'} ${m}</option>`;});
+    if(cur) el.value=cur;
+  });
 
-  // RPD bar
-  mkBar('c-mkt-rpd',topMkts.map(e=>e[0]),[
-    {label:'RPD ($)',data:topMkts.map(e=>e[1].rpd),backgroundColor:COLORS,borderRadius:5}
-  ],false,v=>`${v}`);
-
-  // Table
+  // ── Market Summary Table ──
   const tb=document.getElementById('mkt-tb');
   tb.innerHTML='';
   topMkts.forEach(([market,v],i)=>{
     tb.innerHTML+=`<tr>
       <td><span class="rnk r${i<3?i+1:'n'}">${i+1}</span></td>
-      <td style="font-weight:600">${market}</td>
+      <td style="font-weight:600">${MKT_FLAGS[market]||'🌏'} ${market}</td>
       <td style="font-weight:700;color:var(--accent)">${fmtR(v.rev)}</td>
       <td>${fmt(v.dl)}</td>
-      <td style="color:var(--t2)">${v.rpd.toFixed(3)}</td>
-      <td style="text-align:center">${fmt(v.games)}</td>
+      <td style="color:var(--t2)">$${v.rpd.toFixed(3)}</td>
       <td style="color:var(--blue)">${fmtR(v.ios)}</td>
       <td style="color:var(--grn)">${fmtR(v.android)}</td>
     </tr>`;
   });
+
+  renderTopGames();
+  renderTopPubs();
+}
+
+function renderTopGames(){
+  const mkt=document.getElementById('tg-mkt')?.value||'';
+  const f=getF();
+  let data=D.leaderboard.filter(r=>
+    (!mkt||r.market===mkt)&&
+    (!f.mo||r.month===f.mo)&&
+    (!f.plat||r.platform===f.plat)
+  );
+  // combine platforms per game+market+month
+  const map={};
+  data.forEach(r=>{
+    const key=`${r.game}|||${r.market}|||${r.month}`;
+    if(!map[key]) map[key]={...r,platform:'All',rev:0,dl:0};
+    map[key].rev+=r.rev; map[key].dl+=r.dl;
+  });
+  const rows=Object.values(map).sort((a,b)=>b.rev-a.rev).slice(0,15);
+  const tb=document.getElementById('tg-tb');
+  if(!tb) return;
+  tb.innerHTML='';
+  rows.forEach((r,i)=>{
+    tb.innerHTML+=`<tr>
+      <td><span class="rnk r${i<3?i+1:'n'}">${i+1}</span></td>
+      <td style="font-weight:500;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.game||'—'}</td>
+      <td><span class="pill p-pub" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;display:inline-block">${r.publisher||'—'}</span></td>
+      <td><span class="pill p-g">${r.genre||'—'}</span></td>
+      <td><span class="pill ${r.platform==='ios'?'p-ios':r.platform==='android'?'p-and':'p-all'}">${r.platform==='ios'?'iOS':r.platform==='android'?'Android':'All'}</span></td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(r.rev)}</td>
+      <td>${fmt(r.dl)}</td>
+      <td style="color:var(--t2)">$${r.rpd?.toFixed(3)??'—'}</td>
+    </tr>`;
+  });
+  if(!rows.length) tb.innerHTML='<tr><td colspan="8" style="color:var(--t3);text-align:center;padding:20px">No data</td></tr>';
+}
+
+function renderTopPubs(){
+  const mkt=document.getElementById('tp-mkt')?.value||'';
+  const f=getF();
+  let data=D.publisher.filter(r=>true); // publisher.json không có field market
+  // fallback: dùng leaderboard để tổng hợp publisher per market
+  const lb=D.leaderboard.filter(r=>
+    (!mkt||r.market===mkt)&&
+    (!f.mo||r.month===f.mo)
+  );
+  const pubMap={};
+  lb.forEach(r=>{
+    const k=r.publisher||'Unknown';
+    if(!pubMap[k]) pubMap[k]={publisher:k,country:r.publisher_country||'—',rev:0,dl:0,games:new Set()};
+    pubMap[k].rev+=r.rev; pubMap[k].dl+=r.dl;
+    pubMap[k].games.add(r.game);
+  });
+  const rows=Object.values(pubMap).sort((a,b)=>b.rev-a.rev).slice(0,15);
+  const tb=document.getElementById('tp-tb');
+  if(!tb) return;
+  tb.innerHTML='';
+  rows.forEach((r,i)=>{
+    const rpd=r.dl>0?(r.rev/r.dl).toFixed(3):'—';
+    tb.innerHTML+=`<tr>
+      <td><span class="rnk r${i<3?i+1:'n'}">${i+1}</span></td>
+      <td style="font-weight:500">${r.publisher}</td>
+      <td style="color:var(--t2)">${r.country}</td>
+      <td style="text-align:center">${r.games.size}</td>
+      <td style="font-weight:700;color:var(--accent)">${fmtR(r.rev)}</td>
+      <td>${fmt(r.dl)}</td>
+      <td style="color:var(--t2)">$${rpd}</td>
+    </tr>`;
+  });
+  if(!rows.length) tb.innerHTML='<tr><td colspan="7" style="color:var(--t3);text-align:center;padding:20px">No data</td></tr>';
 }
 
 // ── GENRE ────────────────────────────────────────────────
