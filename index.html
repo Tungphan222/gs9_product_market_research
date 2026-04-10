@@ -234,13 +234,12 @@ tr:hover td{background:var(--al)}
   <div class="tabs">
     <div class="tab active" onclick="T(0)">📋 Summary</div>
     <div class="tab" onclick="T(1)">🗺 Market Size</div>
-    <div class="tab" onclick="T(2)">📈 Trends</div>
-    <div class="tab" onclick="T(3)">🎯 Genre Intel</div>
-    <div class="tab" onclick="T(4)">🏢 Publishers</div>
-    <div class="tab" onclick="T(5)">🏆 Leaderboard</div>
+    <div class="tab" onclick="T(2)">🎯 Genre Intel</div>
+    <div class="tab" onclick="T(3)">🏢 Publishers</div>
+    <div class="tab" onclick="T(4)">🏆 Leaderboard</div>
   </div>
 
-  <!-- PANE 0: SUMMARY -->
+  <!-- PANE 0: SUMMARY + TRENDS -->
   <div class="pane active" id="p0">
     <div class="sec">
       <div class="sh"><div class="st">Executive Summary</div><div class="ss" id="sum-period"></div></div>
@@ -310,34 +309,7 @@ tr:hover td{background:var(--al)}
       </div>
     </div>
     <div class="sec">
-      <div class="card">
-        <div class="ct">New Release vs Old Game — Monthly Trend</div>
-        <div class="cs">Revenue contribution by game age over time · stacked bars</div>
-        <div class="cw h220"><canvas id="c-newold-trend"></canvas></div>
-        <div class="insight"><strong>New Release:</strong> game phát hành đúng tháng đó · <strong>Old Game:</strong> game đã phát hành từ tháng trước</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PANE 1: MARKET SIZE (static Newzoo data) -->
-  <div class="pane" id="p1">
-    <div class="sec">
-      <div class="sh"><div class="st">Market Size by Country</div><div class="ss">Source: Newzoo 2024</div></div>
-      <div class="g3" id="market-cards"></div>
-    </div>
-    <div class="sec">
-      <div class="card">
-        <div class="ct">Spent per Payer by Market</div>
-        <div class="cs">Higher = more valuable per user · SG leads at $182.8</div>
-        <div class="cw h200"><canvas id="c-spp"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PANE 2: TRENDS -->
-  <div class="pane" id="p2">
-    <div class="sec">
-      <div class="sh"><div class="st">Trend Analysis</div><div class="ss">Based on your Sensor Tower data</div></div>
+      <div class="sh"><div class="st">Trend Analysis</div><div class="ss">Monthly breakdown</div></div>
       <div class="g2">
         <div class="card">
           <div class="ct">Revenue Trend by Market</div>
@@ -379,10 +351,30 @@ tr:hover td{background:var(--al)}
         </div>
       </div>
     </div>
+    <div class="sec">
+      <div class="card">
+        <div class="ct">New Release vs Old Game — Monthly Trend</div>
+        <div class="cs">Revenue contribution by game age over time · stacked bars</div>
+        <div class="cw h220"><canvas id="c-newold-trend"></canvas></div>
+        <div class="insight"><strong>New Release:</strong> game phát hành đúng tháng đó · <strong>Old Game:</strong> game đã phát hành từ tháng trước</div>
+      </div>
+    </div>
+  </div>
+    <div class="sec">
+      <div class="sh"><div class="st">Market Size by Country</div><div class="ss">Source: Newzoo 2024</div></div>
+      <div class="g3" id="market-cards"></div>
+    </div>
+    <div class="sec">
+      <div class="card">
+        <div class="ct">Spent per Payer by Market</div>
+        <div class="cs">Higher = more valuable per user · SG leads at $182.8</div>
+        <div class="cw h200"><canvas id="c-spp"></canvas></div>
+      </div>
+    </div>
   </div>
 
-  <!-- PANE 3: GENRE -->
-  <div class="pane" id="p3">
+  <!-- PANE 1: MARKET SIZE -->
+  <div class="pane" id="p1">
     <div class="sec">
       <div class="sh"><div class="st">Genre Intelligence</div><div class="ss">Download vs Revenue — Volume ≠ Monetization</div></div>
       <div class="g2" style="margin-bottom:14px">
@@ -410,8 +402,8 @@ tr:hover td{background:var(--al)}
     </div>
   </div>
 
-  <!-- PANE 4: PUBLISHERS -->
-  <div class="pane" id="p4">
+  <!-- PANE 2: GENRE -->
+  <div class="pane" id="p2">
     <div class="sec">
       <div class="sh"><div class="st">Publisher Performance</div><div class="ss">Based on your Sensor Tower data</div></div>
       <div class="g2" style="margin-bottom:14px">
@@ -443,8 +435,8 @@ tr:hover td{background:var(--al)}
     </div>
   </div>
 
-  <!-- PANE 5: LEADERBOARD -->
-  <div class="pane" id="p5">
+  <!-- PANE 3: PUBLISHERS -->
+  <div class="pane" id="p3">
     <div class="sec">
       <div class="sh"><div class="st">Top Games Leaderboard</div><div class="ss" id="lb-info"></div></div>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end">
@@ -582,7 +574,6 @@ function buildFilters(){
   populateSelect('f-pc',   f.pub_countries,false);
   populateSelect('lb-g',   f.genres,       false);
   populateSelect('lb-m',   f.markets,      false);
-  populateSelect('lb-p',   f.platforms,    false);
   populateSelect('lb-mo',  f.months,       true);
 }
 function populateSelect(id, vals, reverseOrder=false){
@@ -920,26 +911,37 @@ function buildGenre(){
     {label:'REV Share %',data:topG.map(g=>+((genreRev[g]||0)/totalRev*100).toFixed(1)),backgroundColor:'rgba(60,115,99,.7)',borderRadius:3}
   ],false);
 
-  // SubGenre heatmap
-  const subRev={};
+  // SubGenre heatmap — REV + DL
+  const subMap={};
   gd.forEach(r=>{
     const k=`${r.genre}|||${r.sub_genre}`;
-    subRev[k]=(subRev[k]||0)+r.rev;
+    if(!subMap[k]) subMap[k]={rev:0,dl:0};
+    subMap[k].rev+=r.rev;
+    subMap[k].dl +=r.dl;
   });
-  const topSub = Object.entries(subRev).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  const maxV = Math.max(...topSub.map(e=>e[1]))||1;
-  let h=`<table><thead><tr><th>Genre</th><th>Sub-genre</th><th>Total REV</th><th>Visual</th></tr></thead><tbody>`;
+  const topSub = Object.entries(subMap).sort((a,b)=>b[1].rev-a[1].rev).slice(0,15);
+  const maxRev = Math.max(...topSub.map(e=>e[1].rev))||1;
+  const maxDl  = Math.max(...topSub.map(e=>e[1].dl))||1;
+  let h=`<table><thead><tr>
+    <th>Genre</th><th>Sub-genre</th>
+    <th>Total REV</th><th>REV Visual</th>
+    <th>Total DL</th><th>DL Visual</th>
+  </tr></thead><tbody>`;
   topSub.forEach(([k,v])=>{
     const [genre,sub]=k.split('|||');
-    const pct=v/maxV;
-    const bg=`rgba(60,115,99,${.08+pct*.8})`;
-    const tc=pct>.5?'#fff':'#2C2C2A';
-    const barW=Math.round(pct*200);
+    const pRev=v.rev/maxRev;
+    const pDl =v.dl/maxDl;
+    const revBg=`rgba(60,115,99,${.08+pRev*.8})`;
+    const dlBg =`rgba(30,111,168,${.08+pDl*.8})`;
+    const revTc=pRev>.5?'#fff':'#2C2C2A';
+    const dlTc =pDl>.5?'#fff':'#2C2C2A';
     h+=`<tr>
-      <td style="font-weight:600;font-size:10px;color:var(--t2);white-space:nowrap">${genre}</td>
-      <td style="font-size:10px;white-space:nowrap">${sub}</td>
-      <td style="font-weight:700;color:var(--accent)">${fmtR(v)}</td>
-      <td><div style="width:${barW}px;height:8px;background:${bg};border-radius:4px;min-width:4px"></div></td>
+      <td style="font-weight:600;font-size:12px;color:var(--t2);white-space:nowrap">${genre}</td>
+      <td style="font-size:12px;white-space:nowrap">${sub}</td>
+      <td style="font-weight:700;color:var(--accent);font-size:13px">${fmtR(v.rev)}</td>
+      <td><div style="width:${Math.round(pRev*180)+4}px;height:10px;background:${revBg};border-radius:5px"></div></td>
+      <td style="font-weight:700;color:var(--blue);font-size:13px">${fmt(v.dl)}</td>
+      <td><div style="width:${Math.round(pDl*180)+4}px;height:10px;background:${dlBg};border-radius:5px"></div></td>
     </tr>`;
   });
   h+='</tbody></table>';
@@ -1046,10 +1048,9 @@ function T(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
   if(i===1) buildMarket();
-  if(i===2) buildTrends();
-  if(i===3) buildGenre();
-  if(i===4) buildPublishers();
-  if(i===5){ lbPage=0; renderLb(); }
+  if(i===2) buildGenre();
+  if(i===3) buildPublishers();
+  if(i===4){ lbPage=0; renderLb(); }
 }
 </script>
 </body>
