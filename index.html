@@ -181,7 +181,7 @@ tr:hover td{background:var(--al)}
     <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
     <div class="login-err" id="pw-err"></div>
     <div class="login-hint">Contact Tungpnt for access</div>
-    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.0</div>
+    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.1</div>
   </div>
 </div>
 
@@ -566,6 +566,12 @@ async function initApp(){
     D={summary,trends,genre,publisher,leaderboard,filters};
     buildFilters();
     buildSummary();
+    // Pre-build các tab khác để sẵn sàng khi user click
+    setTimeout(()=>{
+      buildMarket();
+      buildGenre();
+      buildPublishers();
+    }, 100);
   }catch(e){alert('Error loading data: '+e.message);console.error(e);}
   document.getElementById('loading').style.display='none';
   document.getElementById('app').style.display='block';
