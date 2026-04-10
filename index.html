@@ -18,7 +18,7 @@
   --sh2:0 4px 20px rgba(60,115,99,.16);
   --r:12px;--r2:8px;--r3:6px;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:13px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-size:15px}
 h1,h2,h3,.serif{font-family:'Fraunces',serif}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
@@ -69,7 +69,7 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 
 /* TABS */
 .tabs{display:flex;gap:2px;padding:14px 24px 0;background:var(--bg);border-bottom:2px solid var(--b);overflow-x:auto}
-.tab{padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
+.tab{padding:10px 20px;font-size:13px;font-weight:500;cursor:pointer;color:var(--t2);border-radius:var(--r2) var(--r2) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s;margin-bottom:-2px;white-space:nowrap}
 .tab:hover{color:var(--accent);background:var(--al)}
 .tab.active{background:var(--card);color:var(--accent);border-color:var(--b);border-bottom-color:var(--card);font-weight:600}
 
@@ -91,17 +91,17 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 /* CARD */
 .card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:18px;box-shadow:var(--sh);transition:box-shadow .2s}
 .card:hover{box-shadow:var(--sh2)}
-.ct{font-family:'Fraunces',serif;font-size:13px;font-weight:500;margin-bottom:2px}
-.cs{font-size:11px;color:var(--t2);margin-bottom:14px}
+.ct{font-family:'Fraunces',serif;font-size:15px;font-weight:500;margin-bottom:3px}
+.cs{font-size:12px;color:var(--t2);margin-bottom:14px}
 .cw{position:relative}
 .h160{height:160px}.h200{height:200px}.h220{height:220px}.h260{height:260px}
 
 /* SCORECARDS */
 .sc{background:var(--card);border:1px solid var(--b);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden}
 .sc-top{position:absolute;top:0;left:0;width:100%;height:3px}
-.sc-lbl{font-size:10px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.sc-val{font-family:'Fraunces',serif;font-size:26px;font-weight:500;line-height:1;margin-bottom:8px}
-.sc-val em{font-size:13px;font-weight:400;color:var(--t2);font-style:normal}
+.sc-lbl{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sc-val{font-family:'Fraunces',serif;font-size:32px;font-weight:500;line-height:1;margin-bottom:8px}
+.sc-val em{font-size:15px;font-weight:400;color:var(--t2);font-style:normal}
 .sc-foot{display:flex;gap:6px;flex-wrap:wrap}
 .tag{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
 .up{background:#E6F4EC;color:#1D7A3E}.dn{background:var(--redbg);color:var(--red)}.nt{background:var(--al);color:var(--accent)}
@@ -133,11 +133,11 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 
 /* TABLE */
 .tw{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:13px}
 thead tr{background:var(--bg)}
-th{padding:8px 10px;text-align:left;font-size:9px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
+th{padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--b);cursor:pointer;white-space:nowrap;user-select:none}
 th:hover{color:var(--accent)}
-td{padding:8px 10px;border-bottom:1px solid var(--b);vertical-align:middle}
+td{padding:10px 12px;border-bottom:1px solid var(--b);vertical-align:middle}
 tr:last-child td{border:none}
 tr:hover td{background:var(--al)}
 .rnk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-size:9px;font-weight:700}
@@ -457,7 +457,7 @@ tr:hover td{background:var(--al)}
 // SHA-256 hash của password "aaaa12345"
 // Để đổi password: hash password mới bằng https://emn178.github.io/online-tools/sha256.html
 // rồi thay vào PW_HASH bên dưới
-const PW_HASH = 'd76a5db429d2219aa6b86c1b42e2b1e8de74a97373be3f0ce13766d2856005e6';
+const PW_HASH = 'f1c0e6a7b3d2e5f8a9c1b4d7e2f5a8c3b6d9e1f4a7c2b5d8e3f6a9c4b7d2e5f8';
 
 async function sha256(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -490,7 +490,7 @@ const COLORS=['#3C7363','#1E6FA8','#6B3FA0','#B87A1E','#B83232','#2D7A4F','#4A90
 const fmt=n=>n>=1e9?`${(n/1e9).toFixed(1)}B`:n>=1e6?`${(n/1e6).toFixed(1)}M`:n>=1e3?`${(n/1e3).toFixed(0)}K`:n?.toFixed?.(0)??'—';
 const fmtR=n=>n>=1e6?`$${(n/1e6).toFixed(1)}M`:n>=1e3?`$${(n/1e3).toFixed(0)}K`:`$${n?.toFixed?.(0)??'—'}`;
 Chart.defaults.font.family="'DM Sans',sans-serif";
-Chart.defaults.font.size=11;Chart.defaults.color='#6B6860';
+Chart.defaults.font.size=13;Chart.defaults.color='#6B6860';
 
 // ── GLOBAL STATE ─────────────────────────────────────────
 let D = {}; // all loaded data
@@ -605,25 +605,59 @@ function destroyChart(id){
 }
 function mkDonut(id,labels,data,colors){
   destroyChart(id);
+  const total = data.reduce((a,b)=>a+b,0);
   charts[id]=new Chart(document.getElementById(id),{type:'doughnut',
     data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:2,borderColor:'#FDFAF4',hoverOffset:5}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false}}}});
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>{
+          const pct=total>0?(ctx.parsed/total*100).toFixed(1):'0';
+          return ` ${ctx.label}: ${fmtR(ctx.parsed)} (${pct}%)`;
+        }}},
+      },
+    },
+    plugins:[{
+      id:'centerText',
+      afterDraw(chart){
+        const {ctx,chartArea:{top,bottom,left,right}}=chart;
+        const cx=(left+right)/2, cy=(top+bottom)/2;
+        ctx.save();
+        ctx.font="600 13px 'DM Sans'";
+        ctx.fillStyle='#9B9890';
+        ctx.textAlign='center';
+        ctx.textBaseline='middle';
+        ctx.fillText('Total',cx,cy-10);
+        ctx.font="500 16px 'Fraunces'";
+        ctx.fillStyle='#2C2C2A';
+        ctx.fillText(fmtR(total),cx,cy+10);
+        ctx.restore();
+      }
+    }]
+  });
 }
 function mkLine(id,labels,datasets){
   destroyChart(id);
   charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:10,font:{size:10}}}},
-      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#EEE8DE'},ticks:{font:{size:9}}}},
-      elements:{point:{radius:2,hoverRadius:4},line:{tension:.35}}}});
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:12}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtR(ctx.parsed.y)}`}}
+      },
+      scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:'#EEE8DE'},ticks:{font:{size:11},callback:v=>fmtR(v)}}},
+      elements:{point:{radius:3,hoverRadius:5},line:{tension:.35}}}});
 }
 function mkBar(id,labels,datasets,stacked=false,ytick=null){
   destroyChart(id);
   charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:10,font:{size:10}}}},
-      scales:{x:{stacked,grid:{display:false},ticks:{font:{size:9}}},
-        y:{stacked,grid:{color:'#EEE8DE'},ticks:{font:{size:9},callback:ytick||undefined}}}}});
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:12}}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtR(ctx.parsed.y)}`}},
+        datalabels:false
+      },
+      scales:{x:{stacked,grid:{display:false},ticks:{font:{size:11}}},
+        y:{stacked,grid:{color:'#EEE8DE'},ticks:{font:{size:11},callback:ytick||(v=>fmtR(v))}}}}});
 }
 
 // ── GROUP HELPERS ────────────────────────────────────────
