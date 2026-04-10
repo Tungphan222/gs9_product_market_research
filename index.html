@@ -181,7 +181,7 @@ tr:hover td{background:var(--al)}
     <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
     <div class="login-err" id="pw-err"></div>
     <div class="login-hint">Contact Tungpnt for access</div>
-    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.2</div>
+    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.3</div>
   </div>
 </div>
 
@@ -198,7 +198,7 @@ tr:hover td{background:var(--al)}
       <div class="logo">🎮</div>
       <div>
         <h1>SEA Game Market <span>Intelligence</span></h1>
-        <div style="font-size:11px;color:var(--t2);margin-top:1px">Powered by Sensor Tower · GS9 Research v1.2</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:1px">Powered by Sensor Tower · GS9 Research v1.3</div>
       </div>
     </div>
     <div class="hdr-r">
@@ -560,11 +560,12 @@ async function loadJSON(file){
 async function initApp(){
   document.getElementById('loading').style.display='flex';
   try{
-    const [summary,trends,genre,publisher,leaderboard,filters]=await Promise.all([
+    const [summary,trends,genre,publisher,leaderboard,filters,market]=await Promise.all([
       loadJSON('summary.json'),loadJSON('trends.json'),loadJSON('genre.json'),
       loadJSON('publisher.json'),loadJSON('leaderboard.json'),loadJSON('filters.json'),
+      loadJSON('market.json'),
     ]);
-    D={summary,trends,genre,publisher,leaderboard,filters};
+    D={summary,trends,genre,publisher,leaderboard,filters,market};
     buildFilters();
     buildSummary();
   }catch(e){alert('Error loading data: '+e.message);console.error(e);}
@@ -799,21 +800,28 @@ function buildSummary(){
   })));
 }
 
-// ── MARKET SIZE (from JSON) ───────────────────────────────
+// ── MARKET SIZE (from market.json) ───────────────────────
 function buildMarket(){
   const f = getF();
+  // market.json schema: {month, market, platform, rev, dl, game_count}
   const md = D.market.filter(r=>
     (!f.mo   || r.month===f.mo) &&
     (!f.plat || r.platform===f.plat)
   );
 
+  if(!md.length){
+    document.getElementById('market-kpi-cards').innerHTML=
+      '<div style="color:var(--t3);font-size:13px;padding:12px">No data for selected filters.</div>';
+    return;
+  }
+
   // Aggregate by market
   const mktMap={};
   md.forEach(r=>{
-    if(!mktMap[r.market]) mktMap[r.market]={rev:0,dl:0,rpd:0,games:0,ios:0,android:0};
-    mktMap[r.market].rev  += r.rev;
-    mktMap[r.market].dl   += r.dl;
-    mktMap[r.market].games+= r.game_count;
+    if(!mktMap[r.market]) mktMap[r.market]={rev:0,dl:0,games:0,ios:0,android:0};
+    mktMap[r.market].rev   += r.rev;
+    mktMap[r.market].dl    += r.dl;
+    mktMap[r.market].games += r.game_count||0;
     if(r.platform==='ios')     mktMap[r.market].ios    += r.rev;
     if(r.platform==='android') mktMap[r.market].android+= r.rev;
   });
@@ -830,7 +838,7 @@ function buildMarket(){
       <div class="sc-val">${fmtR(v.rev)}</div>
       <div class="sc-foot">
         <div class="tag nt">DL: ${fmt(v.dl)}</div>
-        <div class="tag nt">RPD: ${v.rpd.toFixed(3)}</div>
+        <div class="tag nt">RPD: $${v.rpd.toFixed(3)}</div>
       </div>
     </div>`;
   });
@@ -857,7 +865,7 @@ function buildMarket(){
     data:months.map(mo=>md.filter(r=>r.month===mo&&r.market===m).reduce((a,r)=>a+r.dl,0))
   })));
 
-  // Platform split by market stacked bar
+  // Platform split stacked bar
   mkBar('c-mkt-plat-rev',markets,[
     {label:'iOS',    data:markets.map(m=>mktMap[m]?.ios||0),    backgroundColor:'rgba(30,111,168,.75)',borderRadius:3},
     {label:'Android',data:markets.map(m=>mktMap[m]?.android||0),backgroundColor:'rgba(60,115,99,.75)', borderRadius:3}
@@ -866,7 +874,7 @@ function buildMarket(){
   // RPD bar
   mkBar('c-mkt-rpd',topMkts.map(e=>e[0]),[
     {label:'RPD ($)',data:topMkts.map(e=>e[1].rpd),backgroundColor:COLORS,borderRadius:5}
-  ],false,v=>`${v}`);
+  ],false,v=>`$${v}`);
 
   // Table
   const tb=document.getElementById('mkt-tb');
@@ -877,8 +885,7 @@ function buildMarket(){
       <td style="font-weight:600">${market}</td>
       <td style="font-weight:700;color:var(--accent)">${fmtR(v.rev)}</td>
       <td>${fmt(v.dl)}</td>
-      <td style="color:var(--t2)">${v.rpd.toFixed(3)}</td>
-      <td style="text-align:center">${fmt(v.games)}</td>
+      <td style="color:var(--t2)">$${v.rpd.toFixed(3)}</td>
       <td style="color:var(--blue)">${fmtR(v.ios)}</td>
       <td style="color:var(--grn)">${fmtR(v.android)}</td>
     </tr>`;
@@ -1028,9 +1035,9 @@ function T(i){
   document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',i===j));
   document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
   if(i===0) buildSummary();
-  if(i===1){if(!built.market){buildMarket();built.market=true;}else buildMarket();}
-  if(i===2){if(!built.genre){buildGenre();built.genre=true;}else buildGenre();}
-  if(i===3){if(!built.publishers){buildPublishers();built.publishers=true;}else buildPublishers();}
+  if(i===1) buildMarket();
+  if(i===2) buildGenre();
+  if(i===3) buildPublishers();
   if(i===4){lbPage=0;renderLb();}
 }
 </script>
