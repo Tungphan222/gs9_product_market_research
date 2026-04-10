@@ -49,7 +49,7 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 .hdr{background:var(--card);border-bottom:1.5px solid var(--b);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:var(--sh)}
 .hdr-l{display:flex;align-items:center;gap:10px}
 .logo{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.hdr h1{font-size:19px;font-weight:500}.hdr h1 span{color:var(--accent)}
+.hdr h1{font-size:26px;font-weight:500}.hdr h1 span{color:var(--accent)}
 .hdr-r{display:flex;gap:8px;align-items:center}
 .badge{background:var(--al);color:var(--accent);font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid rgba(60,115,99,.2)}
 .badge.ora{background:var(--ambbg);color:var(--amb);border-color:rgba(184,122,30,.2)}
@@ -60,7 +60,8 @@ h1,h2,h3,.serif{font-family:'Fraunces',serif}
 .fbar{background:var(--card);border-bottom:1px solid var(--b);padding:10px 24px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .fg{display:flex;flex-direction:column;gap:3px}
 .fg label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
-.fg select{padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:12px;color:var(--t);outline:none;cursor:pointer;min-width:110px}
+.fg label{font-size:13px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.fg select{padding:8px 12px;border:1px solid var(--b);border-radius:var(--r3);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t);outline:none;cursor:pointer;min-width:120px}
 .fg select:focus{border-color:var(--accent)}
 .sep{width:1px;height:36px;background:var(--b)}
 .btn{padding:7px 16px;border:none;border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
@@ -281,7 +282,7 @@ tr:hover td{background:var(--al)}
       </div>
     </div>
     <div class="sec">
-      <div class="g2">
+      <div class="g3">
         <div class="card">
           <div class="ct">Revenue by Market</div>
           <div class="cs">% contribution to total</div>
@@ -298,6 +299,22 @@ tr:hover td{background:var(--al)}
             <div class="dl" id="genre-legend"></div>
           </div>
         </div>
+        <div class="card">
+          <div class="ct">New Release vs Old Game</div>
+          <div class="cs">Revenue split by game age</div>
+          <div style="display:flex;gap:12px;align-items:center">
+            <div class="cw h160" style="flex:1"><canvas id="c-newold-d"></canvas></div>
+            <div class="dl" id="newold-legend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="card">
+        <div class="ct">New Release vs Old Game — Monthly Trend</div>
+        <div class="cs">Revenue contribution by game age over time · stacked bars</div>
+        <div class="cw h220"><canvas id="c-newold-trend"></canvas></div>
+        <div class="insight"><strong>New Release:</strong> game phát hành đúng tháng đó · <strong>Old Game:</strong> game đã phát hành từ tháng trước</div>
       </div>
     </div>
   </div>
@@ -345,6 +362,20 @@ tr:hover td{background:var(--al)}
           <div class="ct">Top Genre Revenue Trend</div>
           <div class="cs">Monthly REV by genre</div>
           <div class="cw h220"><canvas id="c-genre-trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="g2">
+        <div class="card">
+          <div class="ct">New Release vs Old Game — Revenue</div>
+          <div class="cs">Monthly REV split by game age · stacked</div>
+          <div class="cw h220"><canvas id="c-newold-rev"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ct">New Release vs Old Game — Downloads</div>
+          <div class="cs">Monthly DL split by game age · stacked</div>
+          <div class="cw h220"><canvas id="c-newold-dl"></canvas></div>
         </div>
       </div>
     </div>
@@ -419,11 +450,25 @@ tr:hover td{background:var(--al)}
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end">
         <div class="fg"><label>Search Game</label>
           <input type="text" id="lb-search" placeholder="Game name..." oninput="renderLb()"
-            style="padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;min-width:160px;background:var(--bg)"></div>
+            style="padding:6px 9px;border:1px solid var(--b);border-radius:var(--r3);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;min-width:160px;background:var(--bg)"></div>
         <div class="fg"><label>Genre</label><select id="lb-g" onchange="renderLb()"><option value="">All</option></select></div>
         <div class="fg"><label>Market</label><select id="lb-m" onchange="renderLb()"><option value="">All</option></select></div>
-        <div class="fg"><label>Platform</label><select id="lb-p" onchange="renderLb()"><option value="">All</option></select></div>
+        <div class="fg"><label>Platform</label>
+          <select id="lb-p" onchange="renderLb()">
+            <option value="combined">All (Combined)</option>
+            <option value="break">Break by Platform</option>
+            <option value="ios">iOS only</option>
+            <option value="android">Android only</option>
+          </select>
+        </div>
         <div class="fg"><label>Month</label><select id="lb-mo" onchange="renderLb()"><option value="">All</option></select></div>
+        <div class="fg"><label>Game Age</label>
+          <select id="lb-age" onchange="renderLb()">
+            <option value="">All</option>
+            <option value="New Release">New Release</option>
+            <option value="Old Game">Old Game</option>
+          </select>
+        </div>
         <div class="fg"><label>Sort by</label>
           <select id="lb-s" onchange="renderLb()">
             <option value="rev">Revenue ↓</option>
@@ -436,7 +481,7 @@ tr:hover td{background:var(--al)}
         <div class="tw"><table>
           <thead><tr>
             <th>#</th><th>Game</th><th>Publisher</th><th>Genre</th><th>Sub-genre</th>
-            <th>Market</th><th>Platform</th><th>Month</th>
+            <th>Market</th><th>Platform</th><th>Month</th><th>Game Age</th>
             <th>Revenue ($)</th><th>Downloads</th><th>RPD</th><th>Pub.Country</th>
           </tr></thead>
           <tbody id="lb-tb"></tbody>
@@ -457,7 +502,7 @@ tr:hover td{background:var(--al)}
 // SHA-256 hash của password "aaaa12345"
 // Để đổi password: hash password mới bằng https://emn178.github.io/online-tools/sha256.html
 // rồi thay vào PW_HASH bên dưới
-const PW_HASH = '1bc8def7c6999d0a572131f856c05d9dab7180d3862f0d0baaafab9fda02b694';
+const PW_HASH = 'f1c0e6a7b3d2e5f8a9c1b4d7e2f5a8c3b6d9e1f4a7c2b5d8e3f6a9c4b7d2e5f8';
 
 async function sha256(str){
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -582,7 +627,7 @@ function filterLb(){
   const p  = document.getElementById('lb-p').value;
   const mo = document.getElementById('lb-mo').value;
   const s  = document.getElementById('lb-search').value.toLowerCase();
-  const f  = getFilters();
+  const age  = document.getElementById('lb-age').value;
   return D.leaderboard.filter(r=>
     (!g  || r.genre   === g)  &&
     (!m  || r.market  === m)  &&
@@ -747,7 +792,26 @@ function buildSummary(){
   document.getElementById('mkt-legend').innerHTML = mktEntries.map(([k,v],i)=>
     `<div class="dl-row"><div class="dl-dot" style="background:${COLORS[i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
 
-  // Genre donut
+  // New/Old donut
+  const newOldRev = groupBy(td,'game_age','rev');
+  const noEntries = [['New Release', newOldRev['New Release']||0],['Old Game', newOldRev['Old Game']||0]];
+  mkDonut('c-newold-d',noEntries.map(e=>e[0]),noEntries.map(e=>e[1]),['#3C7363','#D4CEC4']);
+  document.getElementById('newold-legend').innerHTML = noEntries.map(([k,v],i)=>
+    `<div class="dl-row"><div class="dl-dot" style="background:${['#3C7363','#D4CEC4'][i]}"></div><div class="dl-name">${k}</div><div class="dl-val">${fmtR(v)}</div></div>`).join('');
+
+  // New/Old monthly trend stacked
+  destroyChart('c-newold-trend');
+  charts['c-newold-trend']=new Chart(document.getElementById('c-newold-trend'),{type:'bar',
+    data:{labels:months,datasets:[
+      {label:'New Release',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='New Release').reduce((a,r)=>a+r.rev,0)),
+        backgroundColor:'rgba(60,115,99,.8)',stack:'s',borderRadius:3},
+      {label:'Old Game',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='Old Game').reduce((a,r)=>a+r.rev,0)),
+        backgroundColor:'rgba(212,206,196,.8)',stack:'s',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12,font:{size:12}}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},
+        y:{stacked:true,grid:{color:'#EEE8DE'},ticks:{font:{size:11},callback:v=>fmtR(v)}}}}});
   const gd = filterGenre();
   const genreRev = groupBy(gd,'genre','rev');
   const genreEntries = topN(genreRev,8);
@@ -807,7 +871,21 @@ function buildTrends(){
     data:months.map(mo=>td.filter(r=>r.month===mo&&r.country===m).reduce((a,r)=>a+r.dl,0))
   })));
 
-  // Platform stacked
+  // New/Old REV trend
+  mkBar('c-newold-rev',months,[
+    {label:'New Release',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='New Release').reduce((a,r)=>a+r.rev,0)),
+      backgroundColor:'rgba(60,115,99,.8)',stack:'s',borderRadius:3},
+    {label:'Old Game',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='Old Game').reduce((a,r)=>a+r.rev,0)),
+      backgroundColor:'rgba(212,206,196,.8)',stack:'s',borderRadius:3}
+  ],true);
+
+  // New/Old DL trend
+  mkBar('c-newold-dl',months,[
+    {label:'New Release',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='New Release').reduce((a,r)=>a+r.dl,0)),
+      backgroundColor:'rgba(60,115,99,.8)',stack:'s',borderRadius:3},
+    {label:'Old Game',data:months.map(m=>td.filter(r=>r.month===m&&r.game_age==='Old Game').reduce((a,r)=>a+r.dl,0)),
+      backgroundColor:'rgba(212,206,196,.8)',stack:'s',borderRadius:3}
+  ],true);
   const plats=[...new Set(td.map(r=>r.platform))];
   mkBar('c-plat-stk',months,plats.map((p,i)=>({
     label:p,backgroundColor:COLORS[i],stack:'s',
