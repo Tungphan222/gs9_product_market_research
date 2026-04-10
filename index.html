@@ -181,7 +181,7 @@ tr:hover td{background:var(--al)}
     <button class="login-btn" onclick="doLogin()">Access Dashboard</button>
     <div class="login-err" id="pw-err"></div>
     <div class="login-hint">Contact Tungpnt for access</div>
-    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.1</div>
+    <div style="font-size:10px;color:var(--b2);margin-top:6px">v1.2</div>
   </div>
 </div>
 
@@ -198,7 +198,7 @@ tr:hover td{background:var(--al)}
       <div class="logo">🎮</div>
       <div>
         <h1>SEA Game Market <span>Intelligence</span></h1>
-        <div style="font-size:11px;color:var(--t2);margin-top:1px">Powered by Sensor Tower · GS9 Research</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:1px">Powered by Sensor Tower · GS9 Research v1.2</div>
       </div>
     </div>
     <div class="hdr-r">
@@ -571,7 +571,7 @@ async function initApp(){
       buildMarket();
       buildGenre();
       buildPublishers();
-    }, 100);
+    }, 200);
   }catch(e){alert('Error loading data: '+e.message);console.error(e);}
   document.getElementById('loading').style.display='none';
   document.getElementById('app').style.display='block';
